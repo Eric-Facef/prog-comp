@@ -1,0 +1,39 @@
+body {
+    height: 100%;
+    margin: 0;
+}
+.container {
+    width: 400px;  
+    height: 400px;  
+    border-radius: 20%;
+    background-color: blue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    border: solid black;
+    transition: border-radius 0.5s;
+
+}
+.container:hover {
+    border-radius: 50%;
+}
+button {
+    background-color: red;
+    padding: 30px;
+    margin: 5px;
+    cursor: pointer;
+    border: solid white 2px;
+    color: white;
+}
+button:hover {
+    background-color: darkred; 
+    color: white;
+    border-radius: 50%;
+    transition: border-radius 0.5s;
+}
+

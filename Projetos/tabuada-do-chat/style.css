@@ -1,0 +1,71 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 25px;
+}
+
+/* Centralizar inputs e botões em coluna */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input, button {
+  width: 100%;
+  max-width: 400px; /* Limita o tamanho para não ficar esticado */
+  padding: 15px;
+  margin: 8px 0;
+  font-size: 1.3em;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: red;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: blue;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 25px;
+}
+
+li {
+  padding: 12px;
+  font-size: 1.4em;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Melhorias extras para telas muito grandes */
+@media (min-width: 768px) {
+  body {
+    padding: 40px;
+  }
+
+  h1 {
+    font-size: 2.5em;
+  }
+
+  input, button {
+    font-size: 1.5em;
+  }
+
+  li {
+    font-size: 1.5em;
+  }
+}

@@ -1,0 +1,220 @@
+body {
+    font-family: arial, sans-serif;
+    margin: 0; 
+    padding: 0; 
+    background-color: #f4f4f4;
+    text-align: center; 
+}
+header {
+    background: linear-gradient(45deg, black, red, orange, green, purple );
+    background-size: 140% 140%;
+    animation: color 10s ease infinite;
+    color: white;
+    padding: 15px 0px; 
+    font-size: 24px;
+}
+@keyframes color {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+nav {
+    background: black;
+    padding: 10px;  
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+#links-menu {
+    display: flex;
+    gap: 35px; 
+}
+nav a { 
+    color: white;
+    text-decoration: none; 
+    padding: 10px 15px; 
+    font-size: 18px;
+    background: #261FB3;
+    border-radius: 5px;
+    cursor: pointer;
+}
+nav a:hover{
+    background: white;
+    color: black;
+}
+img {
+    width: 120px;
+    height: auto;
+    margin-right: 20px; 
+    border-radius: 60px; 
+    box-shadow: 3px 3px;
+    border: solid black 1px;
+}
+.container {
+    width: 80%; 
+    background: #eeeeee;
+    border-radius: 10px;
+    margin: 20px auto;
+    padding: 20px; 
+    text-align: justify;
+}
+h2 {
+    text-align: center;
+}
+.cont {
+    width: 80%; 
+    background: #eeeeee;
+    border-radius: 10px;
+    margin: 20px auto;
+    padding: 20px; 
+    text-align: center;
+}
+table {
+    margin: 0 auto;
+    width: 50%;
+    border: solid black 2px;
+}
+table, td, th {
+    border-collapse: collapse;
+}
+th {
+    padding: 10px;
+    text-align: center;
+}
+.td3 {
+    padding: 10px;
+    text-align: justify;
+}
+table {
+background: white;
+}
+.sublinhado {
+    text-decoration: underline;
+}
+.td1 {
+    text-align: center;
+}
+.td2{
+    text-align: center;
+}
+h3{
+    text-align: center;
+}
+.nav {
+    background-color: navy;
+    color: white;
+}
+td {
+    padding: 5px;
+}
+.tbody {
+    text-align: center;
+}
+.azul1 {
+    background-color: #C7D9DD;
+}
+.bege1 {
+    background-color: #EBE5C2;
+}
+.p {
+    text-align: center;
+}
+.pd {
+    padding: 15px;
+}
+ul li {
+    padding-bottom: 10px;
+}
+.campos {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    justify-content: flex-start;
+}
+
+.campos label {
+    width: 200px;
+    text-align: right;
+    font-weight: bold;
+}
+
+.campos input,
+.campos select {
+    width: 150px;
+    padding: 5px;
+    font-size: 15px;
+    text-align: center;
+}
+.campos button {
+    width: 100px;
+    padding: 8px 8px;
+    font-size: 16px;
+    margin-right: 10px;
+}
+.button-calc {
+    background-color: blue;
+    color: white;
+    border-radius: 10px;
+    padding: 10px 20px;
+    border: solid black 1px;
+    cursor: pointer;
+    box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.5); 
+    transition: 0.3s;
+}
+.button-calc:hover {
+    background-color: red;
+}
+.quadrado-cor {
+    width: 45px;
+    height: 45px;
+    border: 2px solid black;
+    border-radius: 25px;
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+.Laranja { 
+    background-color: orange;
+    border: orange;
+ }
+.Preta { 
+    background-color: black;
+    color: white;
+    border: black; 
+}
+.Roxa { 
+    background-color: purple;
+    border: purple; 
+}
+.Verde { 
+    background-color: green; 
+    border: green;
+}
+.Vermelha { 
+    background-color: red;
+    border: red; 
+}
+.laranja { 
+    background-color: orange;
+ }
+.preta { 
+    background-color: black;
+    color: white; 
+}
+.roxa { 
+    background-color: purple; 
+}
+.verde { 
+    background-color: green; 
+}
+.vermelha { 
+    background-color: red; 
+}
+

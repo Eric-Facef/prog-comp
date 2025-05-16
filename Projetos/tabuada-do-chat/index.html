@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Tabuada Interativa</title>
+  <meta name="viewport" content="width-device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+  <div class="container">
+    <h1>Tabuada Interativa</h1>
+
+    <input type="number" id="numero" placeholder="Digite o número da tabuada">
+    <input type="number" id="limite" placeholder="Até qual número? (padrão: 10)" min="1">
+
+  <div class="botoes">
+      <button onclick="gerarTabuada()">Gerar Tabuada</button>
+      <button onclick="imprimirTabuada()">Imprimir Tabuada</button>
+  </div>
+
+    <ul id="resultado"></ul>
+  </div>
+  <script src="scripts.js"></script>
+</body>
+</html>

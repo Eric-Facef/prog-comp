@@ -1,0 +1,80 @@
+:root {
+  --bg-color: #f0f8ff;
+  --text-color: #000;
+  --container-bg: #ffffff;
+  --input-bg: #ffffff;
+  --button-border-color: black;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background-color: var(--container-bg);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+input {
+  width: 75%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid;
+  border-radius: 8px;
+  background-color: var(--input-bg);
+}
+
+button {
+  margin: 5px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: solid var(--button-border-color) 1px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+#mensagem, #tentativasLista, #chutesBaixos, #chutesAltos {
+  margin-top: 15px;
+}
+
+/* Modo foco (funciona em qualquer tamanho de tela agora) */
+.foco {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Dark Mode */
+.dark {
+  --bg-color: #121212;
+  --text-color: #f0f0f0;
+  --container-bg: #1e1e1e;
+  --input-bg: #ffffff;
+  --button-border-color: white;
+}
+
+/* Responsivo extra */
+@media (max-width: 400px) {
+  input {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Quadrado por Equipe</title>
+  <style>
+    .quadrado-cor {
+      width: 40px;
+      height: 40px;
+      border: 2px solid black;
+      border-radius: 5px;
+      display: inline-block;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    .laranja { background-color: orange; }
+    .preta { background-color: black; }
+    .roxa { background-color: purple; }
+    .verde { background-color: green; }
+    .vermelha { background-color: red; }
+  </style>
+</head>
+<body>
+
+  <label>Selecione a cor da equipe:</label>
+  <select id="equipe">
+    <option value="Laranja">Laranja</option>
+    <option value="Preta">Preta</option>
+    <option value="Roxa">Roxa</option>
+    <option value="Verde">Verde</option>
+    <option value="Vermelha">Vermelha</option>
+  </select>
+  <div id="quadrado-cor" class="quadrado-cor"></div>
+
+  <script>
+    const selectEquipe = document.getElementById("equipe");
+    const quadrado = document.getElementById("quadrado-cor");
+
+    function atualizarCorQuadrado() {
+      const corSelecionada = selectEquipe.value.toLowerCase();
+      quadrado.className = "quadrado-cor " + corSelecionada;
+    }
+
+    selectEquipe.addEventListener("change", atualizarCorQuadrado);
+    window.addEventListener("DOMContentLoaded", atualizarCorQuadrado);
+  </script>
+
+</body>
+</html>
