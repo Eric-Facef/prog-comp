@@ -1,5 +1,5 @@
 function exe1(){
-    let a, b, c, d, aux, grupo  = 1, i
+    let a, b, c, d, aux, grupo = 1, i
 
     while (grupo <= 5){
         a = Number(prompt(`Informe o valor de A`))
