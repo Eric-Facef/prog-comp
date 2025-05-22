@@ -9,10 +9,9 @@ function exe5(){
             j++;
     }
 
-  alert(tabuada); // Mostra a tabuada de i
+  alert(tabuada); 
   i++;
 }
- 
 
   i++;
 }
