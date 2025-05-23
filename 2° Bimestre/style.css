@@ -3,10 +3,10 @@ body {
     margin: 0;
 }
 .container {
-    width: 400px;  
-    height: 400px;  
+    width: 850px;  
+    height: 450px;  
     border-radius: 20%;
-    background-color: blue;
+    background-color: black;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,11 +19,18 @@ body {
     transition: border-radius 0.5s;
 
 }
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 20px;
+    justify-items: center;
+}
 .container:hover {
-    border-radius: 50%;
+    border-radius: 30%;
 }
 button {
-    background-color: red;
+    background-color: orange;
     padding: 30px;
     margin: 5px;
     cursor: pointer;
