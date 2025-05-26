@@ -4,7 +4,7 @@ const resultadoDiv = document.getElementById('resultado');
 const graficoCanvas = document.getElementById('graficoIMC');
 const btnPDF = document.getElementById('btnPDF');
 
-let grafico; // Chart.js global
+let grafico;
 
 pesoInput.addEventListener('input', () => resultadoDiv.textContent = '');
 alturaInput.addEventListener('input', () => resultadoDiv.textContent = '');
@@ -29,12 +29,19 @@ function calcularIMC() {
   const imc = peso / (altura * altura);
 
   let classificacao = '';
-  if (imc < 18.5) classificacao = 'Abaixo do peso';
-  else if (imc < 24.9) classificacao = 'Peso normal';
-  else if (imc < 29.9) classificacao = 'Sobrepeso';
-  else if (imc < 34.9) classificacao = 'Obesidade grau I';
-  else if (imc < 39.9) classificacao = 'Obesidade grau II';
-  else classificacao = 'Obesidade grau III';
+  if (imc < 18.5) {
+    classificacao = 'Abaixo do peso';
+  } else if (imc < 24.9) {
+    classificacao = 'Peso normal';
+  } else if (imc < 29.9) {
+    classificacao = 'Sobrepeso';
+  } else if (imc < 34.9) {
+    classificacao = 'Obesidade grau I';
+  } else if (imc < 39.9) {
+    classificacao = 'Obesidade grau II';
+  } else {
+    classificacao = 'Obesidade grau III';
+  }
 
   const agora = new Date();
   const dataFormatada = agora.toLocaleDateString('pt-BR');
@@ -95,7 +102,6 @@ function alternarTema() {
   document.body.classList.toggle('dark');
 }
 
-// Exportar PDF (texto + gráfico)
 btnPDF.addEventListener('click', () => {
   if (!resultadoDiv.innerHTML) {
     alert('Calcule o IMC antes de exportar o PDF.');
@@ -106,8 +112,7 @@ btnPDF.addEventListener('click', () => {
     return;
   }
 
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
+  const pdf = new window.jspdf.jsPDF();
 
   pdf.setFontSize(16);
   pdf.text('Resultado do IMC', 10, 20);
@@ -117,11 +122,44 @@ btnPDF.addEventListener('click', () => {
   pdf.setFontSize(12);
   pdf.text(linhas, 10, 30);
 
-  // Converte canvas do gráfico para imagem PNG
   const imgData = graficoCanvas.toDataURL('image/png');
+  pdf.addImage(imgData, 'PNG', 15, 60, 180, 90);
 
-  // Adiciona a imagem no PDF
-  pdf.addImage(imgData, 'PNG', 15, 70, 180, 90);
+  const headers = [['IMC', 'Classificação', 'Obesidade (grau)']];
+  const data = [
+    ['Menor que 18,5', 'Abaixo do peso', '0'],
+    ['18,5 – 24,9', 'Peso normal', '0'],
+    ['25,0 – 29,9', 'Sobrepeso', 'I'],
+    ['30,0 – 34,9', 'Obesidade grau I', 'II'],
+    ['35,0 – 39,9', 'Obesidade grau II', 'II'],
+    ['Maior que 40,0', 'Obesidade grau III', 'III'],
+  ];
+
+  let isDark = false;
+  if (document.body.classList.contains('dark')) {
+    isDark = true;
+  } else {
+    isDark = false;
+  }
+
+  pdf.autoTable({
+    head: headers,
+    body: data,
+    startY: 160,
+    styles: { fontSize: 10, halign: 'center' },
+    headStyles: {
+      fillColor: isDark ? [100, 100, 100] : [59, 130, 246],
+      textColor: 255,
+    },
+    bodyStyles: {
+      fillColor: isDark ? [50, 50, 50] : null,
+      textColor: isDark ? 255 : 0,
+    },
+    alternateRowStyles: {
+      fillColor: isDark ? [70, 70, 70] : null,
+    },
+    margin: { left: 15, right: 15 },
+  });
 
   pdf.save('resultado-imc.pdf');
 });
