@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calculadora de IMC</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- CDN Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- CDN jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora de IMC</h1>
+
+    <label for="peso">Peso (Kg):</label>
+    <input type="number" id="peso" step="0.1" placeholder="Digite seu peso:" />
+
+    <label for="altura">Altura (m):</label>
+    <input type="number" id="altura" step="0.01" placeholder="Digite sua altura:" />
+
+    <button onclick="calcularIMC()">Calcular</button>
+    <button onclick="limparCampos()">Limpar</button>
+    <button onclick="alternarTema()">Tema</button>
+    <button id="btnPDF" style="background:#28a745; color:#fff; margin-top:10px;">Exportar PDF</button>
+
+    <div id="resultado"></div>
+
+    <canvas id="graficoIMC" style="display:none; max-height: 300px; margin-top: 20px;"></canvas>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

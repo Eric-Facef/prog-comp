@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de IMC</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center p-6">
+  <header class="mb-6 text-center">
+    <h1 class="text-3xl font-bold mb-2">Calculadora de IMC</h1>
+    <p class="text-gray-600">Descubra seu Índice de Massa Corporal e veja dicas de saúde</p>
+  </header>
+
+  <main class="w-full max-w-md bg-white p-6 rounded-2xl shadow-xl fade-in">
+    <form id="imc-form" class="space-y-4">
+      <div>
+        <label for="peso" class="block font-semibold">Peso (kg):</label>
+        <input type="number" id="peso" class="w-full p-2 border border-gray-300 rounded" required step="0.1">
+      </div>
+      <div>
+        <label for="altura" class="block font-semibold">Altura (m):</label>
+        <input type="number" id="altura" class="w-full p-2 border border-gray-300 rounded" required step="0.01">
+      </div>
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">Calcular</button>
+    </form>
+
+    <div id="resultado" class="mt-6 text-center font-semibold text-lg"></div>
+    <canvas id="graficoIMC" class="mt-6" style="display: none; max-height: 300px;"></canvas>
+  </main>
+
+  <section class="mt-10 max-w-xl text-sm text-gray-700 bg-white p-4 rounded-xl shadow-md">
+    <h2 class="font-bold mb-2">O que é IMC?</h2>
+    <p>O IMC (Índice de Massa Corporal) é uma medida usada para avaliar se uma pessoa está dentro do peso ideal em relação à sua altura. Embora seja uma referência útil, ele não substitui uma avaliação médica completa.</p>
+  </section>
+
+  <script>
+    const form = document.getElementById('imc-form');
+    const resultado = document.getElementById('resultado');
+    const graficoCanvas = document.getElementById('graficoIMC');
+    let grafico;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const peso = parseFloat(document.getElementById('peso').value);
+      const altura = parseFloat(document.getElementById('altura').value);
+
+      if (isNaN(peso) || isNaN(altura) || peso <= 0 || altura <= 0) {
+        resultado.textContent = 'Insira valores válidos.';
+        return;
+      }
+
+      const imc = peso / (altura * altura);
+      let classificacao = '';
+
+      if (imc < 18.5) classificacao = 'Abaixo do peso';
+      else if (imc < 24.9) classificacao = 'Peso normal';
+      else if (imc < 29.9) classificacao = 'Sobrepeso';
+      else if (imc < 34.9) classificacao = 'Obesidade grau I';
+      else if (imc < 39.9) classificacao = 'Obesidade grau II';
+      else classificacao = 'Obesidade grau III';
+
+      resultado.innerHTML = `Seu IMC é <strong>${imc.toFixed(2)}</strong><br>${classificacao}`;
+
+      exibirGrafico(imc);
+    });
+
+    function exibirGrafico(imc) {
+      graficoCanvas.style.display = 'block';
+
+      if (grafico) grafico.destroy();
+
+      grafico = new Chart(graficoCanvas, {
+        type: 'bar',
+        data: {
+          labels: ['Seu IMC'],
+          datasets: [{
+            label: 'IMC',
+            data: [imc],
+            backgroundColor: ['rgba(59, 130, 246, 0.7)'],
+            borderColor: ['rgba(59, 130, 246, 1)'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              suggestedMax: 40
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
