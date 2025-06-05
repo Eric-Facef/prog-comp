@@ -1,20 +1,26 @@
 :root {
-  --bg-color: #f4f4f4;
-  --text-color: #333;
-  --card-bg: #fff;
-  --button-bg: #007bff;
-  --button-text: #fff;
-  --input-bg: #fff;
+  --bg-color: #000000;
+  --text-color: #222222;
+  --card-bg: #ffffff;
+  --button-bg: #ff0000;          /* Vermelho vivo padrão */
+  --button-hover: #cc0000;
+  --button-text: #ffffff;
+  --pdf-button-bg: #e60000;      /* Vermelho mais forte para o PDF */
+  --pdf-button-hover: #b30000;
+  --input-bg: #ffffff;
   --input-border: #ccc;
 }
 
 body.dark {
-  --bg-color: #121212;
-  --text-color: #f0f0f0;
-  --card-bg: #1e1e1e;
-  --button-bg: #0a84ff;
-  --button-text: #fff;
-  --input-bg: #2c2c2c;
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --card-bg: #000000;
+  --button-bg: #ff0000;
+  --button-hover: #cc0000;
+  --button-text: #ffffff;
+  --pdf-button-bg: #e60000;
+  --pdf-button-hover: #b30000;
+  --input-bg: #1a1a1a;
   --input-border: #444;
 }
 
@@ -30,10 +36,10 @@ body {
   background: var(--card-bg);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   max-width: 500px;
   margin: 0 auto;
-  transition: background 0.3s;
+  transition: background 0.3s, color 0.3s;
 }
 
 h1 {
@@ -46,7 +52,7 @@ label {
 }
 
 input {
-  width: 100%;
+  width: 96%;
   padding: 10px;
   margin-top: 5px;
   border: 1px solid var(--input-border);
@@ -59,20 +65,26 @@ button {
   width: 100%;
   padding: 10px;
   margin-top: 10px;
-  background: var(--button-bg);
+  background-color: var(--button-bg);
   color: var(--button-text);
   border: none;
   border-radius: 4px;
   cursor: pointer;
-}
-
-#btnPDF {
-  background-color: #28a745;
-  color: #fff;
+  transition: background 0.3s;
 }
 
 button:hover {
-  filter: brightness(1.1);
+  background-color: var(--button-hover);
+}
+
+/* Botão PDF com cor exclusiva */
+#btnPDF {
+  background-color: var(--pdf-button-bg);
+  color: var(--button-text);
+}
+
+#btnPDF:hover {
+  background-color: var(--pdf-button-hover);
 }
 
 #resultado {
@@ -91,9 +103,12 @@ canvas {
   margin-top: 30px;
   width: 100%;
   border-collapse: collapse;
+  background-color: var(--input-bg);
+  color: var(--text-color);
 }
 
-.tabela-imc th, .tabela-imc td {
+.tabela-imc th,
+.tabela-imc td {
   border: 1px solid #ccc;
   padding: 8px;
   text-align: center;
@@ -101,6 +116,10 @@ canvas {
 
 .tabela-imc th {
   background-color: #f0f0f0;
+}
+
+body.dark .tabela-imc th {
+  background-color: #111;
 }
 
 @media (max-width: 600px) {

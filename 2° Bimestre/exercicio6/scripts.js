@@ -24,7 +24,8 @@ function exe6() {
 
         if (codigo === "V") {
             totalVista += valor
-        } else {
+        } 
+        else {
             totalPrazo += valor
         }
 

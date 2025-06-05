@@ -1,35 +1,21 @@
 function exe10(){
-    let i, j, entrada, num, somaPares = 0, somaPrimos = 0, primo
-
-    for(i = 0; i < 10; i++){
-        entrada = prompt(`Digite um ${i+1} número `)
-        num = parseInt(entrada)
-        if (isNaN(num)) {
-            alert(`Por favor, digite um número valido`)
-            i--
-            continue
+    let somaPares = 0
+    let somaPrimos = 0 
+    for (let i = 1; i <= 10; i++) {
+        let numero = parseInt(prompt(`Digite o ${i}º número:`))
+        if (numero % 2 === 0) {
+            somaPares += numero
         }
-        if (num % 2 === 0){
-            somaPares += num
-        }
-
-        primo = true
-
-        if (num < 2) {
-            primo = false
-        }
-        else {
-            for(j =2; j <= num / 2; j++) {
-                if(num % j === 0) {
-                    primo = false
-                    j = num
-                }
-            }
-        }
-        if(primo){
-            somaPrimos += num
+    let divisores = 0
+    for (let j = 1; j <= numero; j++) {
+        if (numero % j === 0) {
+            divisores++
         }
     }
-    alert(`Soma dos números pares: ${somaPares}`)
-    alert(`Soma dos números primos: ${somaPrimos}`)
+    if (divisores === 2) {
+        somaPrimos += numero
+    }
+    }
+    console.log("Soma dos números pares:", somaPares)
+    console.log("Soma dos números primos:", somaPrimos)
 }

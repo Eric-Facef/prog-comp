@@ -172,9 +172,11 @@ document.addEventListener('keydown', function (event) {
   }
   if (event.key === 'Enter') {
     calcularIMC();
-  } else if (event.key === '-') {
+  } 
+  else if (event.key === '-') {
     limparCampos();
-  } else if (event.key === '+') {
+  } 
+  else if (event.key === '+') {
     alternarTema();
   }
 });
