@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calculadora de IMC</title>
+  <link rel="stylesheet" href="style.css" />
+  
+
+  <!-- CDN Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- CDN jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- CDN jsPDF AutoTable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora de IMC</h1>
+
+    <label for="peso">Peso (Kg):</label>
+    <input type="number" id="peso" step="0.1" placeholder="Digite seu peso:" />
+
+    <label for="altura">Altura (m):</label>
+    <input type="number" id="altura" step="0.01" placeholder="Digite sua altura:" />
+
+    <button onclick="calcularIMC()">Calcular</button>
+    <button onclick="limparCampos()">Limpar</button>
+    <button onclick="alternarTema()">Tema</button>
+    <button id="btnPDF">Exportar PDF</button>
+
+    <div id="resultado"></div>
+
+    <canvas id="graficoIMC" style="display:none; max-height: 300px; margin-top: 20px;"></canvas>
+
+    <h2 style="margin-top: 30px;">Veja a interpretação do IMC</h2>
+    <div class="tabela-container">
+      <table class="tabela-imc">
+        <thead>
+          <tr>
+            <th>IMC</th>
+            <th>Classificação</th>
+            <th>Obesidade (grau)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Menor que 18,5</td>
+            <td>Abaixo do peso</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>18,5 – 24,9</td>
+            <td>Peso normal</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>25,0 – 29,9</td>
+            <td>Sobrepeso</td>
+            <td>I</td>
+          </tr>
+          <tr>
+            <td>30,0 – 34,9</td>
+            <td>Obesidade grau I</td>
+            <td>II</td>
+          </tr>
+          <tr>
+            <td>35,0 – 39,9</td>
+            <td>Obesidade grau II</td>
+            <td>II</td>
+          </tr>
+          <tr>
+            <td>Maior que 40,0</td>
+            <td>Obesidade grau III</td>
+            <td>III</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="scripts.js"></script>
+</body>
+</html>

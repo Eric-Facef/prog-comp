@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Conversor Binário ⇄ Decimal</title>
+</head>
+<body>
+  <h2>Conversor Binário ⇄ Decimal</h2>
+
+  <label>Decimal:</label>
+  <input type="text" id="decimal" oninput="decimalParaBinario()"><br><br>
+
+  <label>Binário:</label>
+  <input type="text" id="binario" oninput="binarioParaDecimal()"><br><br>
+
+  <script>
+    function decimalParaBinario() {
+      const valor = document.getElementById("decimal").value;
+      const decimal = parseInt(valor, 10);
+      if (!isNaN(decimal)) {
+        document.getElementById("binario").value = decimal.toString(2);
+      } else {
+        document.getElementById("binario").value = "";
+      }
+    }
+
+    function binarioParaDecimal() {
+      const valor = document.getElementById("binario").value;
+      const decimal = parseInt(valor, 2);
+      if (!isNaN(decimal)) {
+        document.getElementById("decimal").value = decimal;
+      } else {
+        document.getElementById("decimal").value = "";
+      }
+    }
+  </script>
+</body>
+</html>
