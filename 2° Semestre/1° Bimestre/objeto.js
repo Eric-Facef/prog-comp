@@ -39,16 +39,3 @@ console.log(`O valor do jogo Ghost of Yotey é de R$${biblioteca[1].valor},00`)
 console.log(`O valor do jogo Ghost of Tsushima é de R$${biblioteca[0].valor},00`) 
 console.log(`O valor do jogo Spider-Man Miles Morales é de R$${biblioteca[2].valor},00`) 
 */
-
-let catalogo = []
-
-for (i = 0; i < 3; i++){
-    let titulo = prompt(`Informe o titulo do jogo ${i+1}`)
-    let autor = prompt(`Informe a produtora do jogo ${i+1}`)
-    let horaszerar = Number(prompt(`Informe a quantidade de horas para zerar ${i+1}`))
-    let valor = prompt
-}
-    titulo: titulo;
-    autor: autor,
-    horaszerar: horaszerar, 
-    valor: valor
