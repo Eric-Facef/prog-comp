@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulado Prefeitura de Franca</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f5f5f5;
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    .question {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #ecf0f1;
+      border-radius: 5px;
+    }
+    .correct {
+      color: green;
+    }
+    .incorrect {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Simulado de Estágio - Prefeitura de Franca</h1>
+  <form id="quizForm"></form>
+
+  <!-- Botão de resultado fora do formulário -->
+  <button type="button" onclick="corrigirQuiz()">Ver Resultado</button>
+
+  <div id="resultado" class="result"></div>
+
+  <script>
+    const perguntas = [
+      ["Assinale a alternativa em que todas as palavras estão corretamente acentuadas:", ["hífem, pônei, véspera", "hífen, pônei, véspera", "hifen, pônei, véspera", "hífen, pônei, vespera"], "B"],
+      ["\"Os estudantes compareceram à reunião, embora estivessem cansados.\" A conjunção \"embora\" expressa:", ["tempo", "condição", "causa", "concessão"], "D"],
+      ["Em qual alternativa há erro de concordância verbal?", ["As provas foram difíceis.", "Ninguém trouxe seus documentos.", "Faltaram energia no prédio.", "Cada aluno entregou seu formulário."], "C"],
+      ["Assinale a alternativa em que há erro de ortografia:", ["Exceção", "Necessário", "Prosição", "Benefício"], "C"],
+      ["A palavra \"contato\" está corretamente escrita. Qual das opções está errada?", ["Contrato", "Contador", "Contágio", "Conctato"], "D"],
+      ["Marque a alternativa com o uso correto da crase:", ["À medida que estudava, melhorava.", "Entregou o presente a ela.", "Saiu a noite.", "Foi à pé."], "A"],
+      ["Qual alternativa apresenta uma figura de linguagem?", ["O cachorro latiu alto.", "A chuva caía sobre o telhado.", "A saudade bateu forte no peito.", "Ela comprou frutas e verduras."], "C"],
+      ["Na frase 'Ele trabalha tanto quanto ela', temos uma ideia de:", ["Comparação", "Tempo", "Causa", "Concessão"], "A"],
+      ["Qual frase apresenta erro de pontuação?", ["João, trouxe os livros, cadernos e canetas.", "Maria chegou tarde.", "O professor, ao entrar, cumprimentou a turma.", "Precisamos estudar mais para a prova."], "A"],
+      ["A palavra 'trouxe' está no tempo verbal:", ["Presente do indicativo", "Futuro do pretérito", "Pretérito perfeito", "Pretérito mais-que-perfeito"], "C"],
+      ["Assinale a alternativa que contém palavras parônimas:", ["Cessar / Sassar", "Censo / Senso", "Mal / Mau", "Sessão / Sessão"], "B"],
+      ["'Nós havíamos estudado bastante'. Qual é o tempo verbal?", ["Futuro do presente", "Pretérito perfeito", "Pretérito mais-que-perfeito composto", "Presente do indicativo"], "C"],
+      ["Assinale a alternativa com erro de regência verbal:", ["Agradeceu ao professor.", "Obedeceu às regras.", "Preferiu mais o azul do que o vermelho.", "Assisti ao filme."], "C"],
+      ["Em qual frase o pronome está mal empregado?", ["Entreguei-lhe o livro.", "Me disseram a verdade.", "Ele me viu na escola.", "Disse-me que viria."], "B"],
+      ["Qual alternativa apresenta apenas substantivos concretos?", ["Felicidade, coragem, bondade", "Mesa, janela, caneta", "Amor, ódio, rancor", "Sabedoria, inteligência, vontade"], "B"],
+      ["Em 'Ele se destacou por sua determinação', o termo 'por sua determinação' é:", ["Predicativo do sujeito", "Objeto direto", "Objeto indireto", "Complemento nominal"], "C"],
+      ["Assinale a alternativa com erro de plural:", ["Jovens felizes", "Cidadões conscientes", "Canções tristes", "Pães frescos"], "B"],
+      ["Qual o antônimo da palavra ‘prudente’:", ["Cuidadoso", "Precipitado", "Razoável", "Inteligente"], "B"],
+      ["A frase: 'Não vi ninguém na escola hoje' tem uma dupla:", ["crase", "regência", "negação", "pontuação"], "C"],
+      ["A palavra que classifica o verbo ‘comer’ em ‘Ele comeu rapidamente’ é:", ["Substantivo", "Advérbio", "Adjetivo", "Pronome"], "B"],
+      ["Qual é a principal causa do aquecimento global?", ["Camada de ozônio", "Queima de combustíveis fósseis", "Ondas solares", "Tempestades magnéticas"], "B"],
+      ["Qual é a capital do estado do Pará?", ["Macapá", "Manaus", "Belém", "São Luís"], "C"],
+      ["O que representa o 7 de setembro no Brasil?", ["Proclamação da República", "Descobrimento do Brasil", "Dia do Trabalhador", "Independência do Brasil"], "D"],
+      ["A democracia é caracterizada principalmente por:", ["Ditadura do governo", "Participação popular nas decisões", "Controle militar", "Monarquia hereditária"], "B"],
+      ["O que é ‘fake news’:", ["Notícias que não foram publicadas", "Boatos inofensivos", "Informação falsa divulgada como verdadeira", "Matérias de revistas antigas"], "C"],
+      ["A energia gerada por hidrelétricas é:", ["Nuclear", "Solar", "Térmica", "Renovável"], "D"],
+      ["A sigla ONU significa:", ["Organização Nacional Unida", "Organização das Nações Unidas", "Ordem Nacional Unificada", "Organização Nacional Universal"], "B"],
+      ["O Pantanal está localizado principalmente nos estados:", ["Amazonas e Acre", "Mato Grosso e Mato Grosso do Sul", "Pará e Roraima", "Bahia e Goiás"], "B"],
+      ["O que é cidadania:", ["Apenas ter um documento de identidade", "Exercer os deveres militares", "Ter direitos e deveres civis, políticos e sociais", "Possuir casa própria"], "C"],
+      ["Qual dessas personalidades é símbolo da luta pelos direitos civis nos EUA?", ["Martin Luther King Jr.", "Barack Obama", "Abraham Lincoln", "Nelson Mandela"], "A"]
+    ];
+
+    const quizForm = document.getElementById("quizForm");
+    const gabarito = {};
+
+    perguntas.forEach((p, i) => {
+      const qNum = i + 1;
+      gabarito[`q${qNum}`] = p[2];
+      const div = document.createElement("div");
+      div.className = "question";
+      div.innerHTML = `<p><strong>${qNum}.</strong> ${p[0]}</p>`;
+      p[1].forEach((alt, idx) => {
+        const letra = String.fromCharCode(65 + idx);
+        div.innerHTML += `<label><input type="radio" name="q${qNum}" value="${letra}"> ${letra}) ${alt}</label><br>`;
+      });
+      quizForm.appendChild(div);
+    });
+
+    function corrigirQuiz() {
+      let acertos = 0;
+      let total = Object.keys(gabarito).length;
+      let resultadoHTML = '<h2>Resultado</h2>';
+
+      for (let q in gabarito) {
+        const radios = document.getElementsByName(q);
+        let respondeu = false;
+        for (let r of radios) {
+          if (r.checked) {
+            respondeu = true;
+            if (r.value === gabarito[q]) {
+              acertos++;
+              resultadoHTML += `<p><strong>${q.toUpperCase()}</strong>: <span class='correct'>Correto</span></p>`;
+            } else {
+              resultadoHTML += `<p><strong>${q.toUpperCase()}</strong>: <span class='incorrect'>Incorreto</span> (Resposta certa: ${gabarito[q]})</p>`;
+            }
+          }
+        }
+        if (!respondeu) {
+          resultadoHTML += `<p><strong>${q.toUpperCase()}</strong>: <span class='incorrect'>Não respondida (Certa: ${gabarito[q]})</span></p>`;
+        }
+      }
+
+      resultadoHTML += `<p><strong>Total de acertos:</strong> ${acertos} de ${total}</p>`;
+      document.getElementById("resultado").innerHTML = resultadoHTML;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Agente NL ⇄ CPC</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Agente NL ⇄ CPC</h1>
+
+    <section class="panel">
+      <h2>1️⃣ Definir proposições</h2>
+      <textarea id="propsInput" placeholder='{"P":"chover","Q":"grama molhada"} ou P=chover' rows="4"></textarea>
+      <div class="row">
+        <button id="saveProps">Salvar</button>
+        <button id="clearProps">Limpar</button>
+      </div>
+      <div id="propsSaved" class="info">Proposições: { }</div>
+    </section>
+
+    <section class="panel">
+      <h2>2️⃣ Entrada</h2>
+      <textarea id="inputText" placeholder='Ex: "Se chover, então a grama ficará molhada." ou (P ∧ Q) → R' rows="4"></textarea>
+      <div class="row">
+        <button id="btnNlToCpc">NL → CPC</button>
+        <button id="btnCpcToNl">CPC → NL</button>
+        <button id="btnChat">Chat</button>
+        <label><input type="checkbox" id="useOpenAI"> Usar OpenAI</label>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>3️⃣ Resultado</h2>
+      <pre id="output" class="output">Aguardando...</pre>
+    </section>
+
+    <footer><small>Desenvolvido para a disciplina de IA — Modo LLM opcional via .env</small></footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

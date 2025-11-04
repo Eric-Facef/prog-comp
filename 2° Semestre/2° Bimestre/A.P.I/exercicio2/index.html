@@ -1,0 +1,153 @@
+<!--<!DOCTYPE html>
+<html lang="pt-BR"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualizador de Postagens</title>
+</head>
+<body>
+  <h1>Visualizador de Postagens</h1>
+
+  <div id="controle">
+    <input type="number" id="quantidade" value="5" min="1" max="20">
+    <button onclick="carregarPostagens()">Carregar Postagens</button>
+  </div>
+
+  <section id="postagens"></section>
+
+  <script>
+    async function carregarPostagens() {
+      const container = document.getElementById("postagens");
+      const qtd = document.getElementById("quantidade").value;
+
+      container.innerHTML = "Carregando postagens";
+
+      try {
+        const resposta = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${qtd}`);
+        const posts = await resposta.json()
+
+        container.innerHTML = "";
+
+        posts.forEach(post => {
+          const bloco = document.createElement("div");
+          
+          bloco.classList.add("post");
+          bloco.innerHTML = `
+            <h3>${post.title}</h3>
+            <p>${post.body}</p>
+          `
+          container.appendChild(bloco);
+        })
+      } catch (erro) {
+        container.innerHTML = `Ocorreu um erro: ${erro.message}`;
+      }
+    }
+  </script>
+</body>
+</html> -->
+
+<!--<!DOCTYPE html>
+<html lang="pt-BR"> 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualizador de Postagens</title>
+</head>
+<body>
+  <h1>Visualizador de Postagens</h1>
+
+  <div id="controle">
+    <input type="number" id="quantidade" value="5" min="1" max="20">
+    <button onclick="carregarPostagens()">Carregar Postagens</button>
+  </div>
+
+  <section id="postagens"></section>
+
+  <script>
+    async function carregarPostagens() {
+      const container = document.getElementById("postagens");
+      const qtd = document.getElementById("quantidade").value;
+
+      container.innerHTML = "Carregando postagens...";
+
+      try {
+        const resposta = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${qtd}`);
+        const posts = await resposta.json();
+
+        container.innerHTML = "";
+
+        posts.forEach((post, index) => {
+          const bloco = document.createElement("div");
+          bloco.classList.add("post");
+          bloco.innerHTML = `
+            <h3>${post.title}</h3>
+            <p>${post.body}</p>
+          `;
+
+          container.appendChild(bloco);
+
+          // adiciona linha separadora entre postagens (exceto na última)
+          if (index < posts.length - 1) {
+            const linha = document.createElement("hr");
+            container.appendChild(linha);
+          }
+        });
+      } catch (erro) {
+        container.innerHTML = `Ocorreu um erro: ${erro.message}`;
+      }
+    }
+  </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Exemplo de Consumo de API</title>
+</head>
+<body>
+  <h1>Lista de Posts</h1>
+  <h2>
+    Informe a qtde de posts desejada <input type="number" id="qtde"/>
+  </h2>
+  <button onclick="carregarPosts()">Carregar Dados</button>
+  <div id="listaPosts"></div>
+
+  <script>
+    // livra de fazer outra atividade quem chamou esta função
+    async function carregarPosts() {
+      let qtde = Number(document.getElementById("qtde").value)
+      try {
+        // await -> aguarda resposta da API
+        const resposta = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${qtde}`);
+        // a API retornou string, precisamos converter para JSON
+        const posts = await resposta.json();
+
+        const lista = document.getElementById("listaPosts");
+        lista.innerHTML = ""; // limpa lista
+
+        // para cada usuário
+        for (let i = 0; i < posts.length; i++) {
+          // cria um elemento html li
+          const secao = document.createElement("section");
+          const h2 = document.createElement("h2");
+          // insere texto no item da lista
+          h2.textContent = posts[i].title;
+          const h4 = document.createElement("h4");
+          h4.textContent = posts[i].body 
+          secao.appendChild(h2)
+          secao.appendChild(h4)
+          const hr = document.createElement("hr")
+          secao.appendChild(hr)
+          // associa o item da lista à lista
+          lista.appendChild(secao);
+        }
+      } catch (erro) {
+        console.error("Erro ao carregar usuários:", erro);
+        alert("Não foi possível carregar os dados da API.");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Simulado - Auxiliar Administrativo (INDEC style)</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#14161a; --muted:#9aa0a6; --accent:#6ee7b7; --danger:#ff6b6b; --glass: rgba(255,255,255,0.03);
+    --max-w:900px;
+  }
+  *{box-sizing:border-box;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial}
+  html,body{height:100%;background:linear-gradient(180deg,#0b0c0f 0%, #0f1115 100%);color:#e6eef3;margin:0;padding:24px;}
+  .wrap{max-width:var(--max-w);margin:0 auto}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  h1{font-size:20px;margin:0}
+  .meta{color:var(--muted);font-size:13px}
+  .card{background:var(--card);border-radius:12px;padding:18px;margin-bottom:14px;box-shadow:0 6px 18px rgba(2,6,23,0.6);}
+  .section-title{display:flex;justify-content:space-between;align-items:center}
+  .q{padding:12px;border-radius:8px;background:var(--glass);margin:10px 0}
+  .q p{margin:0 0 8px 0}
+  .opts{display:flex;flex-direction:column;gap:8px}
+  label.opt{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;cursor:pointer}
+  input[type=radio]{accent-color:var(--accent)}
+  .small{font-size:13px;color:var(--muted)}
+  footer{display:flex;gap:10px;align-items:center;justify-content:flex-end}
+  button{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:10px;color:var(--accent);cursor:pointer}
+  button.primary{background:var(--accent);color:#061017;border:none}
+  .result{font-weight:700;margin-right:auto}
+  .correct{background:linear-gradient(90deg, rgba(110,231,183,0.08), rgba(110,231,183,0.03));border:1px solid rgba(110,231,183,0.12)}
+  .wrong{background:linear-gradient(90deg, rgba(255,107,107,0.06), rgba(255,107,107,0.02));border:1px solid rgba(255,107,107,0.10)}
+  .answer-key{font-size:13px;color:var(--muted);margin-top:8px}
+  .hidden{display:none}
+  @media (max-width:620px){:root{--max-w:100%}header{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Simulado — Auxiliar Administrativo (Banca INDEC)</h1>
+      <div class="meta">40 questões • 2 horas • tema escuro • siga o edital (10 Português / 10 Matemática / 20 Conhecimentos Específicos)</div>
+    </div>
+  </header>
+
+  <form id="quiz">
+  </form>
+
+  <div class="card" id="actions">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="result" id="resultText">Resultados: —</div>
+      <div class="small" id="percentText"></div>
+    </div>
+    <footer>
+      <button type="button" id="showKey">Mostrar Gabarito</button>
+      <button type="button" id="submitBtn" class="primary">Enviar Prova</button>
+    </footer>
+  </div>
+
+  <div class="card small" style="text-align:left;color:var(--muted)">
+    <strong>Como usar</strong><br>
+    - Responda todas as questões e clique em <em>Enviar Prova</em> para ver sua pontuação (número e %).<br>
+    - Clique em <em>Mostrar Gabarito</em> para exibir as respostas corretas (destaca as suas corretas e incorretas).
+  </div>
+</div>
+
+<script>
+// Questões geradas com base no edital (10 Português, 10 Matemática, 12 Administração, 7 Informática = 40)
+const questions = [
+  // PORTUGUÊS (10)
+  {section:'Língua Portuguesa', q:'Assinale a alternativa em que a frase está correta quanto à concordância verbal:',
+   opts:["Fazem muitos anos que não nos vemos.","Faz muito anos que não nos vemos.","Fazem muito tempo que não nos vemos.","Faz muito tempo que não nos vemos."], a:3},
+  {section:'Língua Portuguesa', q:'Qual alternativa apresenta uma palavra com acento indicativo de crase corretamente usado?',
+   opts:["Vou à festa amanhã.","Entreguei o documento a professora.","Refiro-me a aquela situação.","Cheguei a escola cedo."], a:0},
+  {section:'Língua Portuguesa', q:'Em "Os alunos entregaram as provas tarde", o termo "tarde" funciona como:',
+   opts:["advérbio de tempo","adjetivo","substantivo","verbo"], a:0},
+  {section:'Língua Portuguesa', q:'Assinale a alternativa em que há erro de regência verbal:',
+   opts:["Assistir ao filme ontem à noite.","Preciso de ajuda para concluir.","Confio nele plenamente.","Prefiro que você não participe."], a:0},
+  {section:'Língua Portuguesa', q:'Marque a opção em que a colocação pronominal está correta:',
+   opts:["Entregou-me o relatório.","Me entregou o relatório.","Entregou o relatório-me.","O relatório entregou-me."], a:0},
+  {section:'Língua Portuguesa', q:'Qual alternativa é sinônimo de "inequívoco"?',
+   opts:["duvidoso","claro","superficial","complexo"], a:1},
+  {section:'Língua Portuguesa', q:'Assinale a alternativa cujo sentido da palavra é conotativo:',
+   opts:["O mar é azul.","Ele tem cabeça dura.","A caneta está na mesa.","Comprei pão."], a:1},
+  {section:'Língua Portuguesa', q:'Escolha a alternativa com pontuação correta:',
+   opts:["Vamos, embora?","Vamos embora?","Vamos embora.!","Vamos; embora?"], a:1},
+  {section:'Língua Portuguesa', q:'Sobre interpretação de texto: uma ideia implícita é aquela que está:',
+   opts:["escrita explicitamente no texto","sugerida sem estar declarada","incorreta","contraditória"], a:1},
+  {section:'Língua Portuguesa', q:'Na redação oficial, qual o vocativo mais adequado para iniciar um ofício formal?',
+   opts:["Oi, pessoal", "Prezado Senhor Diretor", "E aí chefe?", "Olá"], a:1},
+
+  // MATEMÁTICA (10)
+  {section:'Matemática', q:'Qual o resultado de 25% de 240?', opts:["40","60","50","30"], a:0},
+  {section:'Matemática', q:'Se x+3=8, então x é igual a:', opts:["5","11","-5","8"], a:0},
+  {section:'Matemática', q:'Resolva: 2x^2 - 8 = 0 (x>0)', opts:["x=2","x=-2","x=√2","x=4"], a:0},
+  {section:'Matemática', q:'Uma mercadoria custa R$200 e sofre desconto de 15%. Qual o preço final?', opts:["R$170,00","R$185,00","R$150,00","R$175,00"], a:3},
+  {section:'Matemática', q:'Juros simples: sobre capital R$1.000 a 2% ao mês por 6 meses. Juros totais?', opts:["R$120,00","R$200,00","R$60,00","R$12,00"], a:0},
+  {section:'Matemática', q:'Regra de três: se 5 processos levam 10 dias, quantos dias 8 processos levarão (mesma produtividade)?', opts:["6,25","16","6,5","12,5"], a:2},
+  {section:'Matemática', q:'Qual é a média aritmética de 4, 6 e 10?', opts:["6","8","20","√"], a:0},
+  {section:'Matemática', q:'Resolução de equação: 3x - 9 = 0 → x = ?', opts:["3","-3","9","0"], a:0},
+  {section:'Matemática', q:'Porcentagem: Aumentar 50% em 80 resulta em:', opts:["120","100","160","40"], a:0},
+  {section:'Matemática', q:'Qual o valor da expressão (2+3)×(4-1)?', opts:["15","9","5","20"], a:0},
+
+  // CONHECIMENTOS ESPECÍFICOS - ADMINISTRATIVO (12)
+  {section:'Conhecimentos Específicos', q:'Qual o procedimento adequado para organizar um arquivo físico por ordem alfabética?',
+   opts:["Classificar por data antes de ordenar alfabeticamente","Separar por assunto e depois por ordem alfabética","Jogar todos os documentos em uma caixa","Apenas numerar sem ordem"], a:1},
+  {section:'Conhecimentos Específicos', q:'Ao redigir um ofício, qual informação NÃO é obrigatória?', opts:["Assinatura do responsável","Data","Cumprimento de normas internas","Conteúdo objetivo"], a:2},
+  {section:'Conhecimentos Específicos', q:'O que é protocolo de documentos?', opts:["Sistema de controle de entrada e saída de documentos","Tipo de papel usado","Programa de edição de texto","Marca de caneta"], a:0},
+  {section:'Conhecimentos Específicos', q:'Qual alternativa descreve comportamento ético no serviço público?', opts:["Uso indevido de recursos para fins pessoais","Atendimento discreto e reserva de informações relevantes","Transparência e impessoalidade","Receber presentes de fornecedores"], a:2},
+  {section:'Conhecimentos Específicos', q:'Na redação de uma ata, o que deve constar obrigatoriamente?', opts:["Resumo das decisões tomadas","Opiniões pessoais dos participantes","Fotos do encontro","Endereço residencial dos presentes"], a:0},
+  {section:'Conhecimentos Específicos', q:'Ao montar um relatório simples, qual elemento é essencial?', opts:["Introdução com objetivo","Linguagem coloquial","Muitos adjetivos","Dados irrelevantes"], a:0},
+  {section:'Conhecimentos Específicos', q:'Qual a melhor prática ao receber o público no balcão?', opts:["Ignorar a demanda e anotar para depois","Atendimento cordial e registro do protocolo","Encaminhar sem qualquer registro","Atender somente por telefone"], a:1},
+  {section:'Conhecimentos Específicos', q:'Qual é a função do cadastro de servidores?', opts:["Contabilizar materiais do condomínio","Registrar dados e vínculos funcionais","Substituir arquivos físicos","Organizar festas internas"], a:1},
+  {section:'Conhecimentos Específicos', q:'Quando expedir correspondência oficial, qual o elemento essencial?', opts:["Carimbo da repartição","Assinatura digital ou física do responsável","Envelope colorido","Assinatura do remetente particular"], a:1},
+  {section:'Conhecimentos Específicos', q:'O que é fluxograma em rotinas administrativas?', opts:["Um gráfico que representa etapas de um processo","Tabela de preços","Documento legal","Resumo biográfico"], a:0},
+  {section:'Conhecimentos Específicos', q:'Ao elaborar uma ata, o uso de linguagem deve ser:', opts:["formal e objetiva","extremamente emotiva","coloquial","imprecisa"], a:0},
+  {section:'Conhecimentos Específicos', q:'Qual ação demonstra boa prática de arquivamento?', opts:["Guardar documentos sem identificar","Controlar entradas e datas de guarda","Descartar tudo após 3 dias","Empilhar sem ordem"], a:1},
+
+  // CONHECIMENTOS ESPECÍFICOS - INFORMÁTICA (8)
+  {section:'Informática', q:'No MS-Word 2016, para criar um sumário automático, é necessário:', opts:["Inserir quebras manuais","Aplicar estilos de título (Heading)","Salvar como PDF","Enviar por e-mail"], a:1},
+  {section:'Informática', q:'No Excel, qual função soma um intervalo A1:A10?', opts:["=SUM(A1:A10)","=ADD(A1:A10)","=TOTAL(A1:A10)","=SOMA(A1:A10)"], a:0},
+  {section:'Informática', q:'Qual atalho geralmente abre o gerenciador de tarefas no Windows?', opts:["Ctrl+Alt+Del","Ctrl+C","Alt+F4","Ctrl+S"], a:0},
+  {section:'Informática', q:'Para proteger uma planilha com senha no Excel 2016, usa-se a opção:', opts:["Revisão > Proteger Planilha","Inserir > Tabela","Exibir > Congelar Painéis","Arquivo > Novo"], a:0},
+  {section:'Informática', q:'O que significa "backup"?', opts:["Cópia de segurança dos dados","Arquivo temporário","Tipo de impressora","Software de edição"], a:0},
+  {section:'Informática', q:'No PowerPoint, qual recurso permite animar a entrada de um objeto?', opts:["Transições","Animações","Revisão","Design"], a:1},
+  {section:'Informática', q:'Boas práticas de segurança: qual alternativa é correta?', opts:["Compartilhar senha com colegas","Usar senhas fortes e não compartilhá-las","Anotar senhas em post-its no monitor","Usar a mesma senha para tudo"], a:1},
+  {section:'Informática', q:'Qual o formato de arquivo mais adequado para salvar documentos e manter compatibilidade com a maioria dos editores modernos?', opts:[".doc",".docx",".wps",".pages"], a:1}
+];
+
+// Render
+const form = document.getElementById('quiz');
+let idx=0;
+let currentSection = null;
+questions.forEach((it,i)=>{
+  if(i===0 || questions[i-1].section!==it.section){
+    // section header
+    const sec = document.createElement('div');
+    sec.className='card';
+    sec.innerHTML = `<div class="section-title"><strong>${it.section}</strong><span class="small">${questions.filter(q=>q.section===it.section).length} questões</span></div>`;
+    form.appendChild(sec);
+  }
+  const container = document.createElement('div');
+  container.className='q';
+  container.id = 'q'+i;
+  const qnum = i+1;
+  let html = `<p><strong>${qnum}.</strong> ${it.q}</p><div class="opts">`;
+  it.opts.forEach((o,oi)=>{
+    const name = 'q'+i;
+    html += `<label class="opt" data-q="${i}" data-opt="${oi}"><input type="radio" name="${name}" value="${oi}" /> <span>${String.fromCharCode(65+oi)}. ${o}</span></label>`;
+  });
+  html += `</div><div class="answer-key hidden" id="key${i}">Resposta: <strong>${String.fromCharCode(65+it.a)}</strong></div>`;
+  container.innerHTML = html;
+  form.appendChild(container);
+});
+
+// Logic
+const submitBtn = document.getElementById('submitBtn');
+const showKeyBtn = document.getElementById('showKey');
+const resultText = document.getElementById('resultText');
+const percentText = document.getElementById('percentText');
+let revealed=false;
+
+submitBtn.addEventListener('click',()=>{
+  const total = questions.length;
+  let correct = 0;
+  questions.forEach((q,i)=>{
+    const sel = document.querySelector(`input[name=q${i}]:checked`);
+    const container = document.getElementById('q'+i);
+    container.classList.remove('correct','wrong');
+    if(sel){
+      const val = Number(sel.value);
+      if(val===q.a){ correct++; container.classList.add('correct'); }
+      else { container.classList.add('wrong'); }
+    } else {
+      container.classList.add('wrong');
+    }
+  });
+  const pct = Math.round((correct/total)*100);
+  resultText.textContent = `Acertos: ${correct} / ${total}`;
+  percentText.textContent = `${pct}%`;
+  // After submit, reveal the correct choices in the key only if user clicks show key
+});
+
+showKeyBtn.addEventListener('click',()=>{
+  revealed = !revealed;
+  showKeyBtn.textContent = revealed? 'Ocultar Gabarito' : 'Mostrar Gabarito';
+  questions.forEach((q,i)=>{
+    const key = document.getElementById('key'+i);
+    if(revealed){
+      key.classList.remove('hidden');
+      // highlight correct option label
+      const labels = document.querySelectorAll(`#q${i} label.opt`);
+      labels.forEach(l=>{
+        const optIdx = Number(l.getAttribute('data-opt'));
+        l.classList.remove('correct','wrong');
+        if(optIdx===q.a) l.classList.add('correct');
+        // mark user's wrong selection
+        const radio = l.querySelector('input');
+        if(radio.checked && optIdx!==q.a) l.classList.add('wrong');
+      });
+    } else {
+      key.classList.add('hidden');
+      const labels = document.querySelectorAll(`#q${i} label.opt`);
+      labels.forEach(l=>{ l.classList.remove('correct','wrong'); });
+    }
+  });
+});
+
+// Allow clicking label to check radio (labels already do this), but also keyboard accessibility is native
+
+</script>
+</body>
+</html>

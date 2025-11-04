@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simulado Prefeitura - Quiz</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    margin: 20px;
+  }
+  h1 {
+    text-align: center;
+    color: #003366;
+  }
+  .question {
+    background: white;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.1);
+  }
+  .question h3 {
+    margin-bottom: 8px;
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    cursor: pointer;
+  }
+  input[type="radio"] {
+    margin-right: 8px;
+  }
+  #btn-submit {
+    background: #0059b3;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
+    width: 160px;
+  }
+  #btn-submit:hover {
+    background: #003d80;
+  }
+  #result {
+    max-width: 700px;
+    margin: 0 auto 40px auto;
+    background: #dff0d8;
+    border: 1px solid #3c763d;
+    color: #3c763d;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    display: none;
+    text-align: center;
+  }
+  .correct {
+    color: green;
+    font-weight: bold;
+  }
+  .wrong {
+    color: red;
+    font-weight: bold;
+  }
+  .answer-feedback {
+    margin-top: 5px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<h1>Simulado Prefeitura - Concurso 2025</h1>
+
+<form id="quiz-form">
+
+<!-- Questions will be injected here by JS -->
+
+</form>
+
+<button id="btn-submit">Ver Resultado</button>
+
+<div id="result"></div>
+
+<script>
+// Dados do simulado: perguntas, alternativas, respostas corretas e explicações
+const quizData = [
+  // 1 a 10 Língua Portuguesa
+  {
+    question: "1. Assinale a alternativa com erro de ortografia:",
+    options: {
+      a: "Exceção",
+      b: "Conserteza",
+      c: "Ansioso",
+      d: "Cansativo"
+    },
+    correct: "b",
+    explanation: "“Conserteza” está incorreto; o correto é “com certeza”."
+  },
+  {
+    question: "2. O plural de “cidadão” é:",
+    options: {
+      a: "Cidadões",
+      b: "Cidadãos",
+      c: "Cidades",
+      d: "Cidadães"
+    },
+    correct: "b",
+    explanation: "O plural correto é “cidadãos”."
+  },
+  {
+    question: "3. Qual frase está correta quanto ao uso do porquê?",
+    options: {
+      a: "Não sei o por que ele chorou.",
+      b: "Porque você não veio?",
+      c: "Ele explicou o porquê da ausência.",
+      d: "Porquê você gritou?"
+    },
+    correct: "c",
+    explanation: "“O porquê da ausência” é usado como substantivo."
+  },
+  {
+    question: "4. A forma verbal correta da 1ª pessoa do plural no presente do verbo “caber” é:",
+    options: {
+      a: "Cabemos",
+      b: "Coubermos",
+      c: "Cabemos",
+      d: "Caibamos"
+    },
+    correct: "c",
+    explanation: "“Cabemos” é a forma correta no presente do indicativo."
+  },
+  {
+    question: "5. Assinale a alternativa em que há crase obrigatória:",
+    options: {
+      a: "Ele foi a escola.",
+      b: "Entregou o presente a ela.",
+      c: "Dirigiu-se à diretoria.",
+      d: "Voltou a cidade natal."
+    },
+    correct: "c",
+    explanation: "Usa-se crase em “à diretoria”."
+  },
+  {
+    question: "6. Qual palavra é um advérbio?",
+    options: {
+      a: "Alegre",
+      b: "Rapidamente",
+      c: "Chuva",
+      d: "Andar"
+    },
+    correct: "b",
+    explanation: "“Rapidamente” é um advérbio de modo."
+  },
+  {
+    question: "7. Em: \"Os alunos estudaram muito\", o sujeito é:",
+    options: {
+      a: "Simples",
+      b: "Composto",
+      c: "Indeterminado",
+      d: "Inexistente"
+    },
+    correct: "a",
+    explanation: "“Os alunos” é sujeito simples."
+  },
+  {
+    question: "8. Aponte a alternativa que apresenta regência verbal correta:",
+    options: {
+      a: "Assisti o filme ontem.",
+      b: "Obedeceu o professor.",
+      c: "Prefiro estudar do que sair.",
+      d: "Agradeceu ao colega pela ajuda."
+    },
+    correct: "d",
+    explanation: "“Agradeceu ao colega...” está com regência correta."
+  },
+  {
+    question: "9. Em: “Ela não quer que ninguém a incomode”, temos uma oração:",
+    options: {
+      a: "Coordenada",
+      b: "Interrogativa",
+      c: "Subordinada substantiva objetiva direta",
+      d: "Subordinada adjetiva"
+    },
+    correct: "c",
+    explanation: "Trata-se de uma oração subordinada substantiva objetiva direta."
+  },
+  {
+    question: "10. Qual a figura de linguagem em “O vento sussurrava no ouvido das árvores”?",
+    options: {
+      a: "Antítese",
+      b: "Hipérbole",
+      c: "Prosopopeia",
+      d: "Ironia"
+    },
+    correct: "c",
+    explanation: "“O vento sussurrava...” é prosopopeia (personificação)."
+  },
+
+  // 11 a 20 Raciocínio Lógico
+  {
+    question: "11. Resolva: 3x – 6 = 9",
+    options: {
+      a: "2",
+      b: "3",
+      c: "5",
+      d: "6"
+    },
+    correct: "c",
+    explanation: "3x – 6 = 9 → x = 5"
+  },
+  {
+    question: "12. Qual o valor de 4! (fatorial de 4)?",
+    options: {
+      a: "10",
+      b: "16",
+      c: "24",
+      d: "32"
+    },
+    correct: "c",
+    explanation: "4! = 4×3×2×1 = 24"
+  },
+  {
+    question: "13. Se João tem 5 camisas e 4 calças, de quantas formas pode se vestir?",
+    options: {
+      a: "9",
+      b: "20",
+      c: "12",
+      d: "25"
+    },
+    correct: "b",
+    explanation: "5 camisas × 4 calças = 20 combinações"
+  },
+  {
+    question: "14. Qual é o MMC de 8 e 12?",
+    options: {
+      a: "4",
+      b: "24",
+      c: "36",
+      d: "48"
+    },
+    correct: "b",
+    explanation: "MMC de 8 e 12 = 24"
+  },
+  {
+    question: "15. A razão entre 12 e 3 é:",
+    options: {
+      a: "3",
+      b: "4",
+      c: "6",
+      d: "9"
+    },
+    correct: "b",
+    explanation: "12 ÷ 3 = 4"
+  },
+  {
+    question: "16. Se 5 operários fazem um serviço em 6 dias, quantos dias levarão 10 operários?",
+    options: {
+      a: "3",
+      b: "4",
+      c: "5",
+      d: "6"
+    },
+    correct: "a",
+    explanation: "Mais operários, menos dias → 3 dias"
+  },
+  {
+    question: "17. Qual é a média aritmética dos números 4, 6, 8 e 10?",
+    options: {
+      a: "7",
+      b: "6.5",
+      c: "8",
+      d: "7.5"
+    },
+    correct: "a",
+    explanation: "(4+6+8+10)/4 = 7"
+  },
+  {
+    question: "18. Um número é 20% de 150. Esse número é:",
+    options: {
+      a: "25",
+      b: "30",
+      c: "35",
+      d: "40"
+    },
+    correct: "b",
+    explanation: "20% de 150 = 30"
+  },
+  {
+    question: "19. A sequência: 2, 4, 8, 16, 32 é uma:",
+    options: {
+      a: "PA",
+      b: "PG",
+      c: "Fração",
+      d: "Equação"
+    },
+    correct: "b",
+    explanation: "Multiplicação constante → PG"
+  },
+  {
+    question: "20. Um dado é lançado. Qual a probabilidade de sair um número par?",
+    options: {
+      a: "1/3",
+      b: "1/6",
+      c: "1/2",
+      d: "2/3"
+    },
+    correct: "c",
+    explanation: "Números pares: 2,4,6 → 3/6 = 1/2"
+  },
+
+  // 21 a 40 Conhecimentos Gerais / Atualidades
+  {
+    question: "21. Qual é a capital do estado de São Paulo?",
+    options: {
+      a: "Campinas",
+      b: "Santos",
+      c: "São Paulo",
+      d: "Ribeirão Preto"
+    },
+    correct: "c",
+    explanation: "Capital de SP é São Paulo."
+  },
+  {
+    question: "22. Quem é o atual prefeito de Pedregulho (2025)?",
+    options: {
+      a: "João Dória",
+      b: "Carlos Eduardo Barbosa Teixeira",
+      c: "André Vilela",
+      d: "Fernando Haddad"
+    },
+    correct: "b",
+    explanation: "Carlos Eduardo Barbosa Teixeira é o prefeito atual."
+  },
+  {
+    question: "23. Qual o principal rio da região de Pedregulho?",
+    options: {
+      a: "Rio Doce",
+      b: "Rio Tietê",
+      c: "Rio Grande",
+      d: "Rio Pardo"
+    },
+    correct: "c",
+    explanation: "Rio Grande passa por Pedregulho."
+  },
+  {
+    question: "24. A sede da prefeitura de Pedregulho fica na rua:",
+    options: {
+      a: "Capitão Elias Moreira",
+      b: "Coronel André Vilela",
+      c: "Avenida Paulista",
+      d: "Praça Pe. Luís Sávio"
+    },
+    correct: "b",
+    explanation: "Rua Coronel André Vilela, 96."
+  },
+  {
+    question: "25. A Lei nº 8.666/93 trata de:",
+    options: {
+      a: "Crimes hediondos",
+      b: "Processos licitatórios",
+      c: "Reforma trabalhista",
+      d: "Código de trânsito"
+    },
+    correct: "b",
+    explanation: "Lei 8.666/93 trata de licitações."
+  },
+  {
+    question: "26. Qual é o distrito de Pedregulho listado no edital?",
+    options: {
+      a: "São Joaquim",
+      b: "Alto Porã",
+      c: "Altinópolis",
+      d: "Planalto"
+    },
+    correct: "b",
+    explanation: "Alto Porã é distrito listado."
+  },
+  {
+    question: "27. A ONU é uma organização:",
+    options: {
+      a: "Militar",
+      b: "Internacional",
+      c: "Educacional",
+      d: "Nacional"
+    },
+    correct: "b",
+    explanation: "ONU é uma organização internacional."
+  },
+  {
+    question: "28. A Constituição Federal vigente é de:",
+    options: {
+      a: "2002",
+      b: "1995",
+      c: "1988",
+      d: "1999"
+    },
+    correct: "c",
+    explanation: "Constituição de 1988."
+  },
+  {
+    question: "29. Qual desses temas se relaciona com responsabilidade socioambiental?",
+    options: {
+      a: "Desmatamento",
+      b: "Reciclagem",
+      c: "Conflitos armados",
+      d: "Privatizações"
+    },
+    correct: "b",
+    explanation: "Reciclagem é ação socioambiental."
+  },
+  {
+    question: "30. ESG é a sigla para:",
+    options: {
+      a: "Ética, Sustentabilidade e Gestão",
+      b: "Environmental, Social and Governance",
+      c: "Energia, Sociedade e Governo",
+      d: "Estratégia, Solução e Garantia"
+    },
+    correct: "b",
+    explanation: "ESG = Environmental, Social and Governance."
+  },
+  {
+    question: "31. O município de Pedregulho está localizado em qual mesorregião do estado de SP?",
+    options: {
+      a: "Litoral Norte",
+      b: "Ribeirão Preto",
+      c: "Bauru",
+      d: "Campinas"
+    },
+    correct: "b",
+    explanation: "Pedregulho está na mesorregião de Ribeirão Preto."
+  },
+  {
+    question: "32. Qual o símbolo oficial que representa a cidade, junto à bandeira?",
+    options: {
+      a: "Brasão municipal",
+      b: "Hino nacional",
+      c: "Carimbo oficial",
+      d: "Selo da república"
+    },
+    correct: "a",
+    explanation: "Brasão municipal é símbolo oficial."
+  },
+  {
+    question: "33. O termo “globalização” está mais associado a:",
+    options: {
+      a: "Guerras civis",
+      b: "Abertura de mercados e tecnologias",
+      c: "Fechamento de fronteiras",
+      d: "Isolamento diplomático"
+    },
+    correct: "b",
+    explanation: "Globalização = abertura de mercados e tecnologias."
+  },
+  {
+    question: "34. Um dos principais desafios ambientais no Brasil atual é:",
+    options: {
+      a: "Aumento da população rural",
+      b: "Superprodução industrial",
+      c: "Desmatamento da Amazônia",
+      d: "Baixo índice de natalidade"
+    },
+    correct: "c",
+    explanation: "Desmatamento da Amazônia é um grande desafio."
+  },
+  {
+    question: "35. A energia mais usada no Brasil é:",
+    options: {
+      a: "Solar",
+      b: "Eólica",
+      c: "Hidrelétrica",
+      d: "Termelétrica"
+    },
+    correct: "c",
+    explanation: "Hidrelétrica é a principal fonte."
+  },
+  {
+    question: "36. O Plano Diretor Municipal tem como principal objetivo:",
+    options: {
+      a: "Regular concursos públicos",
+      b: "Organizar o orçamento da saúde",
+      c: "Planejar o crescimento urbano ordenado",
+      d: "Regular o sistema de transporte público"
+    },
+    correct: "c",
+    explanation: "Plano Diretor organiza o crescimento urbano."
+  },
+  {
+    question: "37. A Lei nº 10.520/02 trata:",
+    options: {
+      a: "Do Estatuto da Criança",
+      b: "Da Reforma Agrária",
+      c: "Do Pregão Eletrônico",
+      d: "Do Código Penal"
+    },
+    correct: "c",
+    explanation: "Lei 10.520/02 regula o pregão eletrônico."
+  },
+  {
+    question: "38. Qual órgão da cidade coordena o processo seletivo para estágio segundo o edital?",
+    options: {
+      a: "Secretaria de Administração",
+      b: "Secretaria de Saúde",
+      c: "Secretaria de Educação",
+      d: "Secretaria de Esporte"
+    },
+    correct: "c",
+    explanation: "Secretaria de Educação coordena o processo."
+  },
+  {
+    question: "39. O que representa a sigla CNPJ, exigida no edital?",
+    options: {
+      a: "Cadastro Nacional de Pessoas Jurídicas",
+      b: "Cadastro de Nomes Profissionais Juramentados",
+      c: "Cadastro Nacional de Pessoas Jurídicas e Físicas",
+      d: "Cadastro de Níveis Públicos de Juros"
+    },
+    correct: "a",
+    explanation: "CNPJ = Cadastro Nacional de Pessoas Jurídicas."
+  },
+  {
+    question: "40. O local da prova escrita será:",
+    options: {
+      a: "Câmara Municipal",
+      b: "Ginásio de Esportes",
+      c: "E.M.E.B do Bairro Santa Cruz",
+      d: "Teatro Municipal"
+    },
+    correct: "c",
+    explanation: "Prova será na E.M.E.B do Bairro Santa Cruz."
+  },
+];
+
+// Função para montar o quiz no HTML
+function buildQuiz() {
+  const form = document.getElementById('quiz-form');
+  quizData.forEach((item, index) => {
+    const qNum = index + 1;
+    const div = document.createElement('div');
+    div.className = 'question';
+    div.id = 'question-'+qNum;
+
+    let optionsHtml = '';
+    for (const [key, val] of Object.entries(item.options)) {
+      optionsHtml += `
+      <label>
+        <input type="radio" name="q${qNum}" value="${key}">
+        (${key.toUpperCase()}) ${val}
+      </label>`;
+    }
+
+    div.innerHTML = `
+      <h3>${item.question}</h3>
+      ${optionsHtml}
+      <div class="answer-feedback" id="feedback-q${qNum}" style="display:none;"></div>
+    `;
+
+    form.appendChild(div);
+  });
+}
+
+// Função para corrigir e mostrar resultado
+function checkAnswers() {
+  let score = 0;
+  for(let i=0; i<quizData.length; i++) {
+    const qNum = i+1;
+    const selected = document.querySelector(`input[name="q${qNum}"]:checked`);
+    const feedbackDiv = document.getElementById(`feedback-q${qNum}`);
+
+    if (!selected) {
+      feedbackDiv.style.display = 'block';
+      feedbackDiv.innerHTML = `<span class="wrong">Nenhuma resposta selecionada.</span> <br><small>${quizData[i].explanation}</small>`;
+      feedbackDiv.previousElementSibling.style.color = 'red';
+      continue;
+    }
+
+    if(selected.value === quizData[i].correct) {
+      score++;
+      feedbackDiv.innerHTML = `<span class="correct">Resposta correta!</span><br><small>${quizData[i].explanation}</small>`;
+      feedbackDiv.style.display = 'block';
+      feedbackDiv.previousElementSibling.style.color = 'green';
+    } else {
+      const correctLetter = quizData[i].correct.toUpperCase();
+      const correctText = quizData[i].options[quizData[i].correct];
+      feedbackDiv.innerHTML = `<span class="wrong">Resposta errada. A correta é (${correctLetter}) ${correctText}.</span><br><small>${quizData[i].explanation}</small>`;
+      feedbackDiv.style.display = 'block';
+      feedbackDiv.previousElementSibling.style.color = 'red';
+    }
+  }
+
+  // Mostrar resultado geral
+  const resultDiv = document.getElementById('result');
+  resultDiv.style.display = 'block';
+  resultDiv.textContent = `Você acertou ${score} de ${quizData.length} questões.`;
+  // Scroll para resultado
+  resultDiv.scrollIntoView({behavior:"smooth"});
+}
+
+buildQuiz();
+
+document.getElementById('btn-submit').addEventListener('click', () => {
+  checkAnswers();
+});
+</script>
+
+</body>
+</html>

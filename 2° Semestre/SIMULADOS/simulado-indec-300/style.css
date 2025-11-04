@@ -1,0 +1,90 @@
+:root {
+  --bg: #080910;
+  --card: #11141c;
+  --muted: #a9b5c7;
+  --accent: #7c4dff;
+  --success: #27ae60;
+  --danger: #e74c3c;
+  --info: #3498db;
+  --easy: #2ecc71;
+  --medium: #f1c40f;
+  --hard: #e74c3c;
+  font-family: "Inter", "Roboto", sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(180deg, var(--bg), #040812);
+  color: #e8f0f8;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+  transition: background 0.2s ease, transform 0.1s;
+}
+button:hover { transform: scale(1.03); }
+
+#shuffleBtn { background: var(--accent); }
+#submitBtn { background: var(--success); }
+#showGabarito { background: var(--info); }
+#resetBtn { background: var(--danger); }
+
+.card {
+  background: linear-gradient(180deg, var(--card), rgba(6,8,10,0.6));
+  padding: 16px;
+  border-radius: 12px;
+  margin-top: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.q {
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.alt {
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background 0.15s ease;
+}
+.alt:hover { background: rgba(124,77,255,0.07); }
+.alt.selected { outline: 2px solid rgba(124,77,255,0.3); }
+.alt.correct { background: rgba(39,174,96,0.15); }
+.alt.wrong { background: rgba(231,76,60,0.15); }
+
+.diff-label {
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 2px 6px;
+  margin-left: 6px;
+}
+.diff-easy { background: rgba(46,204,113,0.15); color: var(--easy); }
+.diff-medium { background: rgba(241,196,15,0.15); color: var(--medium); }
+.diff-hard { background: rgba(231,76,60,0.15); color: var(--hard); }

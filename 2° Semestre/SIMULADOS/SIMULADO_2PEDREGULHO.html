@@ -1,0 +1,375 @@
+<!-- Save as simulado_indec_v3.html -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Simulado INDEC v3 — Auxiliar Administrativo (Dark) — Dificuldade</title>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<style>
+  :root{
+    --bg:#070812;
+    --card:#0e1116;
+    --muted:#9fb0c8;
+    --accent:#7c4dff;
+    --success:#27ae60;
+    --danger:#e74c3c;
+    --glass: rgba(255,255,255,0.03);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color-scheme: dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background: radial-gradient(1200px 600px at 10% 10%, rgba(124,77,255,0.06), transparent),
+                 linear-gradient(180deg,var(--bg),#04101a); color:#e8f0f8; -webkit-font-smoothing:antialiased;}
+  .container{max-width:1200px;margin:20px auto;padding:18px}
+  header{display:flex;gap:12px;align-items:center;justify-content:space-between}
+  h1{margin:0;font-size:20px}
+  .subtitle{color:var(--muted);font-size:13px;margin-top:4px}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .btn{background:linear-gradient(180deg,var(--accent), #5a31d6);border:0;padding:10px 12px;border-radius:10px;color:white;cursor:pointer;font-weight:700}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);font-weight:600}
+  .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+  .toolbar{display:flex;gap:8px;align-items:center}
+  .card{background:linear-gradient(180deg,var(--card), rgba(6,8,10,0.6));padding:14px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.6);margin-top:14px}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .chip{padding:6px 10px;border-radius:999px;background:var(--glass);color:var(--muted);font-size:13px}
+  #questions{margin-top:12px}
+  .q{padding:12px;border-radius:10px;margin-bottom:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
+  .q-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+  .q-title{font-weight:700}
+  .difficulty{font-size:12px;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.02);color:var(--muted)}
+  .diff-easy{border:1px solid rgba(46,204,113,0.08);color:var(--success)}
+  .diff-medium{border:1px solid rgba(255,193,7,0.08);color:#f1c40f}
+  .diff-hard{border:1px solid rgba(231,76,60,0.08);color:var(--danger)}
+  .alts{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+  .alt{padding:10px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer;border:1px solid transparent}
+  .alt:hover{border-color:rgba(255,255,255,0.03)}
+  .alt.selected{outline:2px solid rgba(124,77,255,0.12);background:linear-gradient(90deg, rgba(124,77,255,0.06), rgba(0,0,0,0.02))}
+  .alt.correct{background:linear-gradient(90deg, rgba(39,174,96,0.06), rgba(0,0,0,0.02));border-color:rgba(39,174,96,0.12)}
+  .alt.wrong{background:linear-gradient(90deg, rgba(231,76,60,0.05), rgba(0,0,0,0.02));border-color:rgba(231,76,60,0.12)}
+  .footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+  .stats{font-weight:700}
+  select,input[type="number"]{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted)}
+  .small{font-size:13px;color:var(--muted)}
+  footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
+  @media (max-width:800px){header{flex-direction:column;align-items:flex-start} .controls{width:100%;justify-content:flex-start}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <h1>Simulado INDEC v3 — Auxiliar Administrativo</h1>
+      <div class="subtitle">Distribuição: 10 Português / 10 Matemática / 20 Conhecimentos Específicos — Escolha a dificuldade e sorteie</div>
+    </div>
+
+    <div class="controls">
+      <div class="toolbar card" style="display:flex;gap:8px;align-items:center">
+        <label class="small">Filtro de dificuldade:</label>
+        <select id="globalDifficulty">
+          <option value="all">Todas</option>
+          <option value="easy">Fácil</option>
+          <option value="medium">Média</option>
+          <option value="hard">Difícil</option>
+        </select>
+        <label class="small">Informática por prova:</label>
+        <input id="infoCount" type="number" value="6" min="5" max="8" style="width:68px"/>
+        <button id="shuffleBtn" class="btn">Sortear Questões</button>
+        <button id="submitBtn" class="btn secondary">Corrigir Prova</button>
+        <button id="showGabarito" class="btn ghost">Mostrar Gabarito</button>
+        <button id="resetBtn" class="btn ghost">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="card">
+    <div class="meta">
+      <div class="chip">Banca: INDEC (modelo)</div>
+      <div class="chip">Total por prova: <strong>40</strong></div>
+      <div class="chip">Português: 10</div>
+      <div class="chip">Matemática: 10</div>
+      <div class="chip">CE: 20</div>
+      <div class="chip">Informática (dentro CE): <span id="infoDisplay">6</span></div>
+    </div>
+
+    <div class="card small" style="margin-bottom:12px">
+      <div><strong>Como usar</strong>: escolha a dificuldade (ou "Todas"), ajuste quantas de Informática quer dentro dos 20 CE (5–8), e clique em <strong>Sortear Questões</strong>. As questões trazem a tag de dificuldade e a prova será 10+10+20. Depois clique em <strong>Corrigir Prova</strong> para ver acertos e porcentagem. Você pode adicionar mais perguntas diretamente no array <code>questionBank</code> (veja comentários no código).</div>
+    </div>
+
+    <div id="questions"></div>
+
+    <div class="footer">
+      <div class="stats">Acertos: <span id="score">0</span> / <span id="total">0</span> — <span id="percent">0%</span></div>
+      <div class="small">Questões mostradas: <span id="shownCount">0</span></div>
+    </div>
+  </div>
+
+  <footer>Arquivo gerado por sistema — questões reformuladas no estilo INDEC. Para expandir banco, edite <code>questionBank</code>.</footer>
+</div>
+
+<script>
+/*
+  Simulado v3
+  - questionBank: cada item => {id, area: 'port'|'math'|'ce-admin'|'ce-info', enunciado, alternativas:[...], correta: index, difficulty: 'easy'|'medium'|'hard'}
+  - Ao clicar Sortear:
+      10 de port, 10 de math, 20 de CE (sendo N de ce-info conforme campo)
+      Todas as escolhas respeitam o filtro de dificuldade global
+  - Mostrar gabarito e corrigir prova
+  - Arquivo modular: adicione questões ao array questionBank
+*/
+
+/* ===== Exemplo de banco - inicial robusto (ampliável) =====
+   Nota: por questões de tamanho da resposta incluí um conjunto significativo e equilibrado,
+   com muitas questões "difíceis/médias" reformuladas no estilo INDEC.
+   Se quiser eu gero +100 por área em um arquivo separado (zip/arquivo único).
+*/
+
+const questionBank = [
+  /* ================== LÍNGUA PORTUGUESA (exemplos variados, estilo INDEC) ================== */
+  {id:'P001', area:'port', difficulty:'hard', enunciado:'Analise a frase: "Acabou por convencer os mais descrentes." A expressão "por" nesse contexto exerce a função de:', alternativas:['Preposição de causa','Advérbio de intensidade','Marcar voz passiva','Artigo definido'], correta:0},
+  {id:'P002', area:'port', difficulty:'medium', enunciado:'Assinale a alternativa em que a flexão verbal está correta:', alternativas:['Se eu fosse você, não diria isso.','Se eu fosse você, não diría isso.','Se eu for você, eu não diria isso.','Se eu sou você, não diria isso.'], correta:0},
+  {id:'P003', area:'port', difficulty:'hard', enunciado:'Indique a alternativa onde há vício de linguagem (solecismo):', alternativas:['Menos pessoas vieram do que esperávamos.','Houve muitos problemas na execução.','Trouxe menos livros do que achei.','Houveram várias reclamações.'], correta:3},
+  {id:'P004', area:'port', difficulty:'medium', enunciado:'Em "Os alunos que estudam passaram", "que" é:', alternativas:['Pronome relativo','Conjunção integrante','Pronome demonstrativo','Conjunção subordinativa'], correta:0},
+  {id:'P005', area:'port', difficulty:'easy', enunciado:'Assinale a alternativa com a ortografia correta:', alternativas:['Exceção','Excessão','Ecceção','Exseção'], correta:0},
+  {id:'P006', area:'port', difficulty:'hard', enunciado:'Leia: "Sendo bem sincero, não há solução fácil." A expressão "Sendo bem sincero" é um exemplo de:', alternativas:['Adjunto adverbial em forma de gerúndio','Oração subordinada adverbial','Partícula expletiva','Colocação pronominal'], correta:0},
+  {id:'P007', area:'port', difficulty:'medium', enunciado:'Em "Entrega-se os documentos amanhã", a construção é:', alternativas:['Passiva sintética','Passiva analítica','Ativa','Reflexiva'], correta:0},
+  {id:'P008', area:'port', difficulty:'hard', enunciado:'Escolha a alternativa com uso correto de crase:', alternativas:['Referi-me à diretoria antes do prazo.','Vou a Universidade amanhã.','Ela entregou a carta a secretária.','Chegou à 8 horas.'], correta:0},
+  {id:'P009', area:'port', difficulty:'medium', enunciado:'A polissemia caracteriza-se por:', alternativas:['Uma palavra com vários sentidos contextuais','Duas palavras com grafia idêntica','Erros de concordância','Sinonímia perfeita'], correta:0},
+  {id:'P010', area:'port', difficulty:'hard', enunciado:'Assinale a alternativa que contém verbo transitivo indireto:', alternativas:['Gosto de música clássica.','Quebrou a janela.','Vendeu o carro.','Ele chamou o colega.'], correta:0},
+  {id:'P011', area:'port', difficulty:'medium', enunciado:'Em "Nem todos chegaram", a palavra "nem" tem função de:', alternativas:['Enfatizar negação parcial','Conjunção adversativa','Preposição','Pronome indefinido'], correta:0},
+  {id:'P012', area:'port', difficulty:'hard', enunciado:'Sobre regência verbal, qual está correta?', alternativas:['Assistir (no sentido ver) exige objeto indireto: assistir ao jogo','Assistir no sentido ver exige complemento sem preposição','Assisti o filme ontem (correto sem preposição)','Assistir pede sempre preposição'], correta:0},
+  {id:'P013', area:'port', difficulty:'easy', enunciado:'Escolha o antônimo de "efêmero":', alternativas:['Permanente','Curto','Instável','Rápido'], correta:0},
+  {id:'P014', area:'port', difficulty:'medium', enunciado:'Assinale a alternativa em que há concordância verbal correta:', alternativas:['Havia muitas pessoas na fila.','Houveram muitos problemas ontem.','Fizemos o que pediu.','Precisa ajustes no texto.'], correta:0},
+  {id:'P015', area:'port', difficulty:'hard', enunciado:'Identifique a figura de linguagem em: "A cidade dorme sob o manto da neblina."', alternativas:['Metáfora','Sinestesia','Hipérbole','Metonímia'], correta:0},
+
+  /* (adicionar mais P0xx para ampliar — este arquivo é modular) */
+
+  /* ================== MATEMÁTICA (vários níveis) ================== */
+  {id:'M001', area:'math', difficulty:'medium', enunciado:'Se 3/4 de um número é 18, qual é o número?', alternativas:['24','25','22','20'], correta:0},
+  {id:'M002', area:'math', difficulty:'hard', enunciado:'Resolva a equação: 2x^2 - 5x - 3 = 0. As raízes são:', alternativas:['3 e -0.5','-1 e 1.5','-3 e 0.5','3 e -1'], correta:0},
+  {id:'M003', area:'math', difficulty:'easy', enunciado:'Qual é 20% de 150?', alternativas:['30','20','15','25'], correta:0},
+  {id:'M004', area:'math', difficulty:'medium', enunciado:'MMC entre 18 e 24 é:', alternativas:['72','36','12','48'], correta:0},
+  {id:'M005', area:'math', difficulty:'hard', enunciado:'Um capital de R$ 2.000,00 rende 10% ao ano em juros compostos. Após 2 anos terá:', alternativas:['R$2.420,00','R$2.200,00','R$2.400,00','R$2.200,00'], correta:0},
+  {id:'M006', area:'math', difficulty:'medium', enunciado:'Regra de três direta: se 5 máquinas fazem 80 peças em 4 horas, quantas horas 8 máquinas fariam para a mesma quantidade?', alternativas:['2,5','5','3','4'], correta:0},
+  {id:'M007', area:'math', difficulty:'hard', enunciado:'Calcule o determinante da matriz 2x2: [[3,5],[2,7]].', alternativas:['11','29','1','-1'], correta:0},
+  {id:'M008', area:'math', difficulty:'medium', enunciado:'Se x = 2 e y = -3, calcule 3x^2 + 2y', alternativas:['6','8','10','4'], correta:0},
+  {id:'M009', area:'math', difficulty:'easy', enunciado:'Simplifique 45/60 =', alternativas:['3/4','4/3','2/3','3/5'], correta:0},
+  {id:'M010', area:'math', difficulty:'hard', enunciado:'Resolva: log_2 (32) =', alternativas:['5','4','6','3'], correta:0},
+  {id:'M011', area:'math', difficulty:'medium', enunciado:'Qual é a área de um triângulo com base 10 e altura 6?', alternativas:['30','16','60','40'], correta:0},
+  {id:'M012', area:'math', difficulty:'hard', enunciado:'Uma sequência aritmética tem 1º termo 5 e razão 3. Qual o 10º termo?', alternativas:['32','30','35','29'], correta:0},
+  {id:'M013', area:'math', difficulty:'medium', enunciado:'Percentual de redução: de 500 para 375 houve redução de quantos por cento?', alternativas:['25%','20%','30%','15%'], correta:0},
+  {id:'M014', area:'math', difficulty:'hard', enunciado:'Se f(x)=2x+1 e g(x)=x^2, então (g∘f)(2) =', alternativas:['25','9','16','5'], correta:0},
+  {id:'M015', area:'math', difficulty:'medium', enunciado:'Conversão: 0,125 em fração é:', alternativas:['1/8','1/4','5/40','1/16'], correta:0},
+
+  /* ================== CONHECIMENTOS ESPECÍFICOS — ADMINISTRATIVO ================== */
+  {id:'A001', area:'ce-admin', difficulty:'medium', enunciado:'Sobre princípios da administração pública, assinale o que corresponde ao princípio da impessoalidade:', alternativas:['Tratar indistintamente os cidadãos sem favorecimentos','Atuar de forma eficiente','Publicar atos administrativos','Garantir direito de defesa'], correta:0},
+  {id:'A002', area:'ce-admin', difficulty:'hard', enunciado:'No processo administrativo, o princípio do devido processo legal garante:', alternativas:['Ampla defesa e contraditório','Sigilo absoluto','Decisão sumária sem defesa','Publicidade irrestrita sem exceções'], correta:0},
+  {id:'A003', area:'ce-admin', difficulty:'medium', enunciado:'O empenho na administração pública é:', alternativas:['A reserva de dotação para pagar futuras despesas','Pagamento imediato','Relatório contábil','Instrumento de arrecadação'], correta:0},
+  {id:'A004', area:'ce-admin', difficulty:'easy', enunciado:'Qual documento serve para protocolar entrada de um ofício?', alternativas:['Comprovante de protocolo','Ata de reunião','Contrato','Despacho interno'], correta:0},
+  {id:'A005', area:'ce-admin', difficulty:'hard', enunciado:'A Lei de Responsabilidade Fiscal (LRF) impõe limites e regras principalmente sobre:', alternativas:['Gestão fiscal, despesas com pessoal e transparência','Direitos trabalhistas','Consentimento de licitações','Contratos privados'], correta:0},
+  {id:'A006', area:'ce-admin', difficulty:'medium', enunciado:'Em rotinas administrativas, o controle interno tem por objetivo:', alternativas:['Prevenir e detectar irregularidades e avaliar conformidade','Substituir o Tribunal de Contas','Elaborar leis','Executar auditorias externas'], correta:0},
+  {id:'A007', area:'ce-admin', difficulty:'hard', enunciado:'Sobre modalidades de licitação, assinale a alternativa que descreve corretamente a modalidade "Pregão":', alternativas:['Adequado para compras comuns e pode ser eletrônico','Exclusivo para obras de grande porte','Não admite disputa de preços','É uma contratação direta sem procedimento'], correta:0},
+  {id:'A008', area:'ce-admin', difficulty:'medium', enunciado:'No atendimento ao público, é correto afirmar que o servidor deve:', alternativas:['Manter postura cortês e fornecer informações claras','Negar informações sem justificativa','Remeter sem registro todas as solicitações','Fornecer dados sigilosos sem autorização'], correta:0},
+  {id:'A009', area:'ce-admin', difficulty:'hard', enunciado:'Assinale a melhor prática para reduzir risco de fraudes em pagamentos municipais:', alternativas:['Conferência em dois níveis e segregação de funções','Atribuir todas as etapas a um único funcionário','Eliminar auditoria','Usar sempre o mesmo fornecedor'], correta:0},
+  {id:'A010', area:'ce-admin', difficulty:'easy', enunciado:'O que é um memorando interno?', alternativas:['Comunicação formal entre setores','Documento fiscal','Contrato de trabalho','Relatório anual'], correta:0},
+  {id:'A011', area:'ce-admin', difficulty:'medium', enunciado:'O arquivo morto refere-se a:', alternativas:['Documentos que não têm uso corrente, mas devem ser preservados','Documentos para descarte imediato','Documentos confidenciais apenas','Documentos digitais apenas'], correta:0},
+  {id:'A012', area:'ce-admin', difficulty:'hard', enunciado:'No processo administrativo disciplinar, a punição só deve ser aplicada após:', alternativas:['Regular apuração com direito à defesa','Decisão do gestor sem defesa','Denúncia pública','Encaminhamento à polícia sem apuração interna'], correta:0},
+  {id:'A013', area:'ce-admin', difficulty:'medium', enunciado:'Qual a função de uma requisição de compra?', alternativas:['Solicitar aquisição de bens ou serviços internamente','Gerar nota fiscal','Arquivo de contratos','Controle de ponto'], correta:0},
+  {id:'A014', area:'ce-admin', difficulty:'hard', enunciado:'Transparência ativa na administração pública significa:', alternativas:['Publicar informações relevantes independentemente de pedido','Responder apenas a pedidos de informação','Ocultar despesas pequenas','Divulgar somente balanços anuais'], correta:0},
+  {id:'A015', area:'ce-admin', difficulty:'medium', enunciado:'Assinale procedimento correto em relação a assinatura digital:', alternativas:['Usar certificados para garantir autenticidade e integridade','Assinar sem certificado','Enviar sem validação','Substituir por assinatura manuscrita em todos os casos'], correta:0},
+
+  /* ================== CONHECIMENTOS ESPECÍFICOS — INFORMÁTICA ================== */
+  {id:'I001', area:'ce-info', difficulty:'easy', enunciado:'Atalho padrão para colar no Windows é:', alternativas:['Ctrl + V','Ctrl + C','Ctrl + X','Alt + F4'], correta:0},
+  {id:'I002', area:'ce-info', difficulty:'medium', enunciado:'Formato nativo das planilhas do Excel (versões recentes) é:', alternativas:['.xlsx','.xls','.ods','.csv'], correta:0},
+  {id:'I003', area:'ce-info', difficulty:'hard', enunciado:'Em segurança da informação, a técnica que garante que um documento não foi alterado é chamada de:', alternativas:['Hash/assinatura digital','Criptografia reversa','Firewall','Antivírus'], correta:0},
+  {id:'I004', area:'ce-info', difficulty:'medium', enunciado:'Protocolo usado para envio de e-mails entre servidores é:', alternativas:['SMTP','HTTP','FTP','DNS'], correta:0},
+  {id:'I005', area:'ce-info', difficulty:'hard', enunciado:'Em redes, máscara 255.255.255.0 identifica uma rede com quantos hosts possíveis (endereços úteis)?', alternativas:['254','256','252','255'], correta:0},
+  {id:'I006', area:'ce-info', difficulty:'medium', enunciado:'O que é backup incremental?', alternativas:['Cópia apenas dos dados alterados desde o último backup completo ou incremental','Cópia total todos os dias','Backup para nuvem apenas','Excluir dados após cópia'], correta:0},
+
+  /* ================== Mais questões (extras para ampliar sem escrever 300 manualmente) ==================
+     Observação: para ampliar até 100 por área, basta replicar/adicionar entradas seguindo o mesmo modelo.
+     O arquivo já suporta banco muito maior — basta inserir objetos adicionais no array.
+  */
+];
+
+/* ====== Configurações ====== */
+const PROVA_CONFIG = {portCount:10, mathCount:10, ceTotal:20}; // ceTotal inclui ce-info count set by user
+// DOM refs
+const questionsDiv = document.getElementById('questions');
+const shuffleBtn = document.getElementById('shuffleBtn');
+const submitBtn = document.getElementById('submitBtn');
+const showGabaritoBtn = document.getElementById('showGabarito');
+const resetBtn = document.getElementById('resetBtn');
+const globalDifficulty = document.getElementById('globalDifficulty');
+const infoCountInput = document.getElementById('infoCount');
+const infoDisplay = document.getElementById('infoDisplay');
+const scoreSpan = document.getElementById('score');
+const totalSpan = document.getElementById('total');
+const percentSpan = document.getElementById('percent');
+const shownCountSpan = document.getElementById('shownCount');
+
+infoCountInput.addEventListener('change', ()=> {
+  let v = parseInt(infoCountInput.value);
+  if(isNaN(v) || v<5) v=5;
+  if(v>8) v=8;
+  infoCountInput.value = v;
+  infoDisplay.innerText = v;
+});
+
+let currentExam = []; // array of question objects selected for this prova (in order)
+function filterByDifficulty(pool, difficulty) {
+  if(!difficulty || difficulty === 'all') return pool.slice();
+  return pool.filter(q => q.difficulty === difficulty);
+}
+function pickRandom(arr, n){
+  const copy = arr.slice();
+  const out = [];
+  while(out.length < n && copy.length){
+    const idx = Math.floor(Math.random()*copy.length);
+    out.push(copy.splice(idx,1)[0]);
+  }
+  return out;
+}
+function shuffle(a){ return a.sort(()=>Math.random()-0.5); }
+
+function buildExam(){
+  const difficulty = globalDifficulty.value;
+  const infoCount = parseInt(infoCountInput.value);
+  // select pools with difficulty filter
+  const portPool = filterByDifficulty(questionBank.filter(q=>q.area==='port'), difficulty);
+  const mathPool = filterByDifficulty(questionBank.filter(q=>q.area==='math'), difficulty);
+  const infoPool = filterByDifficulty(questionBank.filter(q=>q.area==='ce-info'), difficulty);
+  const adminPool = filterByDifficulty(questionBank.filter(q=>q.area==='ce-admin'), difficulty);
+
+  // Check availability and warn in console if insufficient
+  if(portPool.length < PROVA_CONFIG.portCount) console.warn('Poucas questões de Português disponíveis no filtro escolhido:', portPool.length);
+  if(mathPool.length < PROVA_CONFIG.mathCount) console.warn('Poucas questões de Matemática disponíveis no filtro escolhido:', mathPool.length);
+  if((infoPool.length + adminPool.length) < PROVA_CONFIG.ceTotal) console.warn('Poucas questões de CE disponíveis no filtro escolhido:', infoPool.length + adminPool.length);
+
+  const ports = pickRandom(portPool, PROVA_CONFIG.portCount);
+  const maths = pickRandom(mathPool, PROVA_CONFIG.mathCount);
+  const infos = pickRandom(infoPool, infoCount);
+  const remainingCe = PROVA_CONFIG.ceTotal - infos.length;
+  const admins = pickRandom(adminPool, remainingCe);
+
+  currentExam = shuffle([...ports, ...maths, ...admins, ...infos]);
+  renderExam();
+}
+
+function difficultyClass(d) {
+  if(d==='easy') return 'diff-easy';
+  if(d==='medium') return 'diff-medium';
+  return 'diff-hard';
+}
+
+function renderExam(){
+  questionsDiv.innerHTML = '';
+  currentExam.forEach((q, idx)=>{
+    const qEl = document.createElement('div');
+    qEl.className = 'q';
+    qEl.dataset.qid = q.id;
+    qEl.innerHTML = `
+      <div class="q-head">
+        <div class="q-title">${idx+1}. ${q.enunciado}</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="difficulty ${difficultyClass(q.difficulty)}">${q.difficulty === 'easy' ? 'Fácil' : q.difficulty === 'medium' ? 'Média' : 'Difícil'}</div>
+          <div class="small" style="color:var(--muted)">${q.area === 'port' ? 'Português' : q.area === 'math' ? 'Matemática' : q.area === 'ce-info' ? 'Informática' : 'CE - Administrativo'}</div>
+        </div>
+      </div>
+      <div class="alts"></div>
+    `;
+    const altsWrap = qEl.querySelector('.alts');
+    q.alternativas.forEach((aText, ai)=>{
+      const aDiv = document.createElement('div');
+      aDiv.className = 'alt';
+      aDiv.dataset.ai = ai;
+      aDiv.innerText = String.fromCharCode(65+ai) + '. ' + aText;
+      aDiv.addEventListener('click', ()=> {
+        // single-select
+        Array.from(altsWrap.children).forEach(c => c.classList.remove('selected'));
+        aDiv.classList.add('selected');
+        qEl.dataset.selected = ai;
+      });
+      altsWrap.appendChild(aDiv);
+    });
+    questionsDiv.appendChild(qEl);
+  });
+  // update stats
+  shownCountSpan.innerText = currentExam.length;
+  totalSpan.innerText = currentExam.length;
+  scoreSpan.innerText = '0';
+  percentSpan.innerText = '0%';
+}
+
+/* show gabarito */
+function showGabarito(){
+  document.querySelectorAll('.q').forEach(node=>{
+    const qid = node.dataset.qid;
+    const q = currentExam.find(x=>x.id===qid);
+    if(!q) return;
+    const selected = node.dataset.selected;
+    Array.from(node.querySelectorAll('.alt')).forEach(alt=>{
+      const ai = parseInt(alt.dataset.ai,10);
+      alt.classList.remove('correct','wrong');
+      if(ai === q.correta) alt.classList.add('correct');
+      if(selected !== undefined && selected !== '' && ai !== q.correta && ai === (parseInt(selected,10))) alt.classList.add('wrong');
+    });
+  });
+}
+
+/* grade exam */
+function gradeExam(){
+  let correct = 0;
+  currentExam.forEach(q=>{
+    const node = document.querySelector(`.q[data-qid="${q.id}"]`);
+    if(!node) return;
+    const sel = node.dataset.selected;
+    if(sel !== undefined && sel !== '' && (parseInt(sel,10) === q.correta)) correct++;
+  });
+  const total = currentExam.length;
+  const pct = total ? Math.round((correct/total)*10000)/100 : 0;
+  scoreSpan.innerText = `${correct}`;
+  percentSpan.innerText = `${pct}%`;
+  // show gabarito visual
+  showGabarito();
+}
+
+/* reset selections display */
+function resetSelections(){
+  document.querySelectorAll('.q').forEach(node=>{
+    node.removeAttribute('data-selected');
+    node.querySelectorAll('.alt').forEach(a => a.classList.remove('selected','correct','wrong'));
+  });
+  scoreSpan.innerText = '0';
+  percentSpan.innerText = '0%';
+}
+
+/* Event bindings */
+shuffleBtn.addEventListener('click', ()=> {
+  buildExam();
+});
+submitBtn.addEventListener('click', ()=> {
+  gradeExam();
+});
+showGabaritoBtn.addEventListener('click', ()=> {
+  showGabarito();
+});
+resetBtn.addEventListener('click', ()=> {
+  resetSelections();
+});
+
+/* Initialize with a default exam on load (Todas as dificuldades) */
+globalDifficulty.value = 'all';
+infoCountInput.value = 6;
+infoDisplay.innerText = infoCountInput.value;
+buildExam();
+
+/* ====== Helper: como aumentar banco ======
+   Para adicionar questões, basta inserir novos objetos no array `questionBank` com a forma:
+   { id:'P999', area:'port'|'math'|'ce-admin'|'ce-info', difficulty:'easy'|'medium'|'hard',
+     enunciado:'Texto da questão', alternativas: ['A','B','C','D'], correta: 0 }
+   Depois de inserir, clique em Sortear para que entrem no pool.
+*/
+</script>
+</body>
+</html>

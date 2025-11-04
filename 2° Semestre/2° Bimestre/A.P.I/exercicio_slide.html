@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consulta de Endereços</title>
+</head>
+<body>
+  <h1>Lista de Usuários e Endereços</h1>
+  <button onclick="buscarUsuarios()">Buscar Dados</button>
+  <div id="resultado"></div>
+
+  <script>
+    async function buscarUsuarios() {
+      const resultado = document.getElementById("resultado")
+      resultado.innerText = "Buscando usuários"
+
+      try {
+        const resposta = await fetch("https://jsonplaceholder.typicode.com/users")
+        const usuarios = await resposta.json()
+
+        let html = "<ul>"
+        for (const user of usuarios) {
+          html += `
+            <li>
+              <strong>${user.name}</strong><br>
+              Rua: ${user.address.street}<br>
+              Cidade: ${user.address.city}<br>
+              CEP: ${user.address.zipcode}
+            </li><br>
+          `
+        }
+        html += "</ul>"
+
+        resultado.innerHTML = html
+
+      } catch (erro) {
+        resultado.innerText = `Ocorreu um erro: ${erro.message}`
+      }
+    }
+  </script>
+</body>
+</html>

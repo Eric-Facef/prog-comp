@@ -16,30 +16,25 @@
 
             projetos.push(projeto);
         }
-
         let maior = projetos[0];
-
         for (i = 0; i < projetos.length; i++) {
 
             if (projetos[i].duracaoMeses > 12 && projetos[i].orcamento > 1000000) {
-                console.log(`Projeto: ${projetos[i].nomeProjeto}, Empresa: ${projetos[i].empresa}, Duração: ${projetos[i].duracaoMeses} meses, Orçamento: R$ ${projetos[i].orcamento.toLocaleString()}`);
+                console.log(`Projeto: ${projetos[i].nomeProjeto}, Empresa: ${projetos[i].empresa}, 
+                Duração: ${projetos[i].duracaoMeses} meses, Orçamento: R$ ${projetos[i].orcamento.toLocaleString()}`);
             }
-
             if (projetos[i].orcamento > maior.orcamento) {
                 maior = projetos[i];
             }
-
             somaDuracao += projetos[i].duracaoMeses;
 
             if (projetos[i].empresa.toLowerCase() === "inovatech") {
                 qtdInovaTech++;
             }
-
             if (projetos[i].duracaoMeses < 6) {
                 totalCurtaDuracao += projetos[i].orcamento;
             }
         }
-
         console.log(`\nProjeto com maior orçamento: ${maior.nomeProjeto} (R$ ${maior.orcamento.toLocaleString()})`);
         console.log(`Média de duração dos projetos: ${(somaDuracao / projetos.length).toFixed(2)} meses`);
         console.log(`Quantidade de projetos da InovaTech: ${qtdInovaTech}`);

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Simulado INDEC — v4 (corrigido)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>Simulado INDEC — v4 (Dark Edition)</h1>
+      <div class="chip">10 Português / 10 Matemática / 20 CE (com Informática ajustável)</div>
+    </div>
+    <div class="controls">
+      <label>Dificuldade:</label>
+      <select id="globalDifficulty">
+        <option value="all">Todas</option>
+        <option value="easy">Fácil</option>
+        <option value="medium">Média</option>
+        <option value="hard">Difícil</option>
+      </select>
+      <label>Informática:</label>
+      <input id="infoCount" type="number" value="6" min="5" max="8" style="width:48px">
+      <button id="shuffleBtn">Sortear Questões</button>
+      <button id="submitBtn">Corrigir Prova</button>
+      <button id="showGabarito">Mostrar Gabarito</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+  </div>
+
+  <div id="status" class="card"></div>
+  <div id="questionsArea" class="card"></div>
+  <div id="results" class="card"></div>
+</div>
+
+<script src="questions.js"></script>
+<script>
+const PROVA = { port:10, math:10, ce:20 };
+const questionsArea = document.getElementById('questionsArea');
+const resultsDiv = document.getElementById('results');
+const shuffleBtn = document.getElementById('shuffleBtn');
+const submitBtn = document.getElementById('submitBtn');
+const showGabaritoBtn = document.getElementById('showGabarito');
+const resetBtn = document.getElementById('resetBtn');
+const globalDifficulty = document.getElementById('globalDifficulty');
+const infoCountInput = document.getElementById('infoCount');
+const statusDiv = document.getElementById('status');
+
+function filterByDifficulty(pool, diff) {
+  if (!diff || diff === 'all') return pool.slice();
+  const filtered = pool.filter(q => q.difficulty === diff);
+  if (filtered.length < pool.length * 0.3) return pool.slice(); // fallback se poucas questões
+  return filtered;
+}
+
+function pickRandom(arr, n) {
+  const copy = arr.slice();
+  const out = [];
+  while (out.length < n && copy.length) {
+    const idx = Math.floor(Math.random() * copy.length);
+    out.push(copy.splice(idx, 1)[0]);
+  }
+  return out;
+}
+
+function shuffle(a) { return a.sort(() => Math.random() - 0.5); }
+
+let currentExam = [];
+function buildExam() {
+  const diff = globalDifficulty.value;
+  const infoCount = parseInt(infoCountInput.value) || 6;
+
+  const portPool = filterByDifficulty(questionBank.filter(q => q.area === 'port'), diff);
+  const mathPool = filterByDifficulty(questionBank.filter(q => q.area === 'math'), diff);
+  const infoPool = filterByDifficulty(questionBank.filter(q => q.area === 'ce-info'), diff);
+  const adminPool = filterByDifficulty(questionBank.filter(q => q.area === 'ce-admin'), diff);
+
+  const ports = pickRandom(portPool, PROVA.port);
+  const maths = pickRandom(mathPool, PROVA.math);
+  const infos = pickRandom(infoPool, infoCount);
+  const remainingCe = PROVA.ce - infoCount;
+  const admins = pickRandom(adminPool, remainingCe);
+
+  currentExam = shuffle([...ports, ...maths, ...admins, ...infos]);
+  renderExam(diff, infoCount);
+}
+
+function renderExam(diff, infoCount) {
+  const total = currentExam.length;
+  statusDiv.innerHTML = `<strong>${total}</strong> questões sorteadas (10 Português, 10 Matemática, 20 CE — ${infoCount} de Informática). Dificuldade: <strong>${diff === 'all' ? 'Todas' : diff.charAt(0).toUpperCase() + diff.slice(1)}</strong>`;
+  questionsArea.innerHTML = '';
+  currentExam.forEach((q, idx) => {
+    const div = document.createElement('div');
+    div.className = 'q';
+    div.dataset.qid = q.id;
+    const diffLabel = q.difficulty === 'easy' ? 'Fácil' : q.difficulty === 'medium' ? 'Média' : 'Difícil';
+    const diffClass = 'diff-' + q.difficulty;
+    div.innerHTML = `<div><strong>${idx + 1}. </strong>${q.enunciado} <span class="diff-label ${diffClass}">[${diffLabel}]</span></div><div class="alternativas" style="margin-top:8px"></div>`;
+    const altWrap = div.querySelector('.alternativas');
+    q.alternativas.forEach((a, ai) => {
+      const aDiv = document.createElement('div');
+      aDiv.className = 'alt';
+      aDiv.dataset.ai = ai;
+      aDiv.innerText = String.fromCharCode(65 + ai) + '. ' + a;
+      aDiv.addEventListener('click', () => {
+        Array.from(altWrap.children).forEach(c => c.classList.remove('selected'));
+        aDiv.classList.add('selected');
+        div.dataset.selected = ai;
+      });
+      altWrap.appendChild(aDiv);
+    });
+    questionsArea.appendChild(div);
+  });
+  resultsDiv.innerHTML = '';
+}
+
+function showGabarito() {
+  document.querySelectorAll('.q').forEach(node => {
+    const qid = node.dataset.qid;
+    const q = currentExam.find(x => x.id === qid);
+    const selected = node.dataset.selected;
+    Array.from(node.querySelectorAll('.alt')).forEach(alt => {
+      const ai = parseInt(alt.dataset.ai, 10);
+      alt.classList.remove('correct', 'wrong');
+      if (ai === q.correta) alt.classList.add('correct');
+      if (selected !== undefined && selected !== '' && ai !== q.correta && ai === parseInt(selected, 10)) alt.classList.add('wrong');
+    });
+  });
+}
+
+function gradeExam() {
+  let correct = 0;
+  currentExam.forEach(q => {
+    const node = document.querySelector(`.q[data-qid="${q.id}"]`);
+    const sel = node ? node.dataset.selected : undefined;
+    if (sel !== undefined && sel !== '' && parseInt(sel, 10) === q.correta) correct++;
+  });
+  const total = currentExam.length;
+  const pct = total ? Math.round((correct / total) * 10000) / 100 : 0;
+  resultsDiv.innerHTML = `<div>Acertos: <strong>${correct}</strong> / ${total} — <strong>${pct}%</strong></div>`;
+  showGabarito();
+}
+
+shuffleBtn.addEventListener('click', buildExam);
+submitBtn.addEventListener('click', gradeExam);
+showGabaritoBtn.addEventListener('click', showGabarito);
+resetBtn.addEventListener('click', () => {
+  document.querySelectorAll('.q').forEach(node => {
+    delete node.dataset.selected;
+    node.querySelectorAll('.alt').forEach(a => a.classList.remove('selected', 'correct', 'wrong'));
+  });
+  resultsDiv.innerHTML = '';
+});
+
+buildExam();
+</script>
+</body>
+</html>

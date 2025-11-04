@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simulado — Auxiliar Administrativo</title>
+
+  <!-- CSS NO MESMO NÍVEL DO INDEX -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header>
+      <div>
+        <h1>Simulado — Auxiliar Administrativo (Banca INDEC)</h1>
+        <div class="meta">10 Português | 10 Matemática | 12 Administrativo | 8 Informática</div>
+      </div>
+    </header>
+
+    <div class="card">
+      <nav class="tabs">
+        <button id="tabExam" class="active">Prova</button>
+        <button id="tabKey">Gabarito / Respostas</button>
+        <button id="tabBank">Banco de Questões (ler)</button>
+      </nav>
+
+      <div class="controls">
+        <label>Dificuldade:</label>
+        <select id="difficultySelect">
+          <option value="mix">Misturar</option>
+          <option value="facil">Fácil</option>
+          <option value="medio">Médio</option>
+          <option value="dificil">Difícil</option>
+        </select>
+
+        <button id="drawBtn" class="small">Sortear Prova</button>
+
+        <label class="row">
+          <input type="checkbox" id="noRepeat" /> Não repetir questões
+        </label>
+
+        <button id="clearHistory" class="small">Limpar histórico</button>
+
+        <div class="last">Último sorteio: <span id="lastDraw">—</span></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div id="examArea" class="panel">
+          <div id="examInfo" class="small">Clique em <strong>Sortear Prova</strong> para iniciar.</div>
+          <form id="quiz"></form>
+
+          <div class="bottom-controls">
+            <div id="resultText" class="result">Acertos: —</div>
+            <div id="percentText" class="percent"></div>
+            <button id="submitBtn" class="primary">Enviar Prova</button>
+            <button id="showKeyBtn" class="small">Mostrar Gabarito</button>
+          </div>
+        </div>
+
+        <div id="keyArea" class="panel hidden">
+          <h3>Gabarito</h3>
+          <div id="keyList" class="bank-list small"></div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="panel">
+          <strong>Informações</strong>
+          <div class="small">
+            <ul>
+              <li>Prova gerada aleatoriamente</li>
+              <li>40 questões totais</li>
+              <li>Histórico salvo no navegador</li>
+            </ul>
+          </div>
+
+          <hr />
+
+          <strong>Histórico</strong>
+          <div id="historyLog" class="log">Nenhuma prova aplicada ainda.</div>
+        </div>
+
+        <div class="panel">
+          <strong>Banco</strong>
+          <div id="bankSummary" class="small">Carregando...</div>
+        </div>
+      </aside>
+    </div>
+
+    <div id="bankTab" class="card hidden">
+      <h3>Banco de Questões completo</h3>
+      <div id="bankAll" class="bank-list"></div>
+    </div>
+
+  </div>
+
+  <!-- ✅ IMPORTANTE: CAMINHOS CORRETOS RELATIVOS AO INDEX DENTRO DA PASTA "simulado" -->
+  <script src="banco/questoes_completas.js"></script>
+  <script src="simulado.js"></script>
+
+</body>
+</html>
